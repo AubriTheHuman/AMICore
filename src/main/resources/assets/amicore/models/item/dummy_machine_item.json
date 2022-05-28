@@ -1,0 +1,8 @@
+{
+    "parent": "minecraft:block/orientable",
+    "textures": {
+      "top": "amicore:item/dummy_machine_front",
+      "front": "amicore:item/dummy_machine_side",
+      "side": "amicore:item/dummy_machine_side"
+    }
+  }

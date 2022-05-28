@@ -1,0 +1,13 @@
+{
+    "item.amicore.dummy_ore_item": "Dummy Ore Item",
+    "item.amicore.dummy_metal_item": "Dummy Metal Item",
+    "item.amicore.dummy_machine_item": "Dummy Machine Item",
+    "item.amicore.dummy_fluid_item": "Dummy Fluid Item",
+    "item.amicore.dummy_material_item": "Dummy Material Item",
+
+    "itemGroup.oretab": "AMICore Ores",
+    "itemGroup.metaltab": "AMICore Metals",
+    "itemGroup.machinetab": "AMICore Machines",
+    "itemGroup.fluidtab": "AMICore Fluids",
+    "itemGroup.materialtab": "AMICore Materials"
+}
