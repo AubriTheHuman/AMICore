@@ -4,31 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.aubrithehuman.amicore.config.AMIConfig;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.ArcFurnaceLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.AutoWorkbenchLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.CokerLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.DistillationTowerLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.FermenterLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.HydroTreaterLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.MixerLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.PressLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.RefineryLubricationHandler;
-import com.aubrithehuman.amicore.immerivepetrol.lubricator.SqueezerLubricationHandler;
 import com.aubrithehuman.amicore.item.ModItems;
 import com.aubrithehuman.amicore.malum.MalumSpiritAdditons;
-import com.aubrithehuman.fluids.FluidTagsAMI;
 
-import blusunrize.immersiveengineering.common.blocks.metal.ArcFurnaceTileEntity;
-import blusunrize.immersiveengineering.common.blocks.metal.AutoWorkbenchTileEntity;
-import blusunrize.immersiveengineering.common.blocks.metal.FermenterTileEntity;
-import blusunrize.immersiveengineering.common.blocks.metal.MetalPressTileEntity;
-import blusunrize.immersiveengineering.common.blocks.metal.MixerTileEntity;
-import blusunrize.immersiveengineering.common.blocks.metal.RefineryTileEntity;
-import blusunrize.immersiveengineering.common.blocks.metal.SqueezerTileEntity;
-import flaxbeard.immersivepetroleum.api.crafting.LubricatedHandler;
-import flaxbeard.immersivepetroleum.common.blocks.tileentities.CokerUnitTileEntity;
-import flaxbeard.immersivepetroleum.common.blocks.tileentities.DistillationTowerTileEntity;
-import flaxbeard.immersivepetroleum.common.blocks.tileentities.HydrotreaterTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -83,7 +61,6 @@ public class AMICore
     	MalumSpiritAdditons.register();
     	
     	init();
-    	FluidTagsAMI.init();
     	
     	ModLoadingContext.get().registerConfig(Type.COMMON, AMIConfig.SPEC, "amicore-common.toml");
     	
@@ -102,18 +79,7 @@ public class AMICore
     
     public static void init() {
 
-		LubricatedHandler.registerLubricatedTile(MixerTileEntity.class, MixerLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(ArcFurnaceTileEntity.class, ArcFurnaceLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(AutoWorkbenchTileEntity.class, AutoWorkbenchLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(CokerUnitTileEntity.class, CokerLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(DistillationTowerTileEntity.class, DistillationTowerLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(FermenterTileEntity.class, FermenterLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(MetalPressTileEntity.class, PressLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(RefineryTileEntity.class, RefineryLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(SqueezerTileEntity.class, SqueezerLubricationHandler::new);
-		LubricatedHandler.registerLubricatedTile(HydrotreaterTileEntity.class, HydroTreaterLubricationHandler::new);
-		
-    	LOGGER.info("AMICore Init");
+		LOGGER.info("AMICore Init");
     }
 
     private void setup(final FMLCommonSetupEvent event)
