@@ -1,0 +1,30 @@
+{
+    "replace": false,
+    "values": [
+        "malum:sacred_spirit",
+        "malum:wicked_spirit",
+        "malum:arcane_spirit",
+        "malum:eldritch_spirit",
+        "malum:earthen_spirit",
+        "malum:infernal_spirit",
+        "malum:aerial_spirit",
+        "malum:aquatic_spirit",
+        "malum:malicious_spirit",
+        "malum:magnetic_spirit",
+        "malum:ruinous_spirit",
+        "malum:tempestuous_spirit",
+        "malum:electric_spirit",
+        "malum:mechanical_spirit",
+        "malum:herbal_spirit",
+        "malum:voidial_spirit",
+        "malum:deathly_spirit",
+        "malum:astral_spirit",
+        "malum:corporeal_spirit",
+        "malum:chaotic_spirit",
+        "malum:frozen_spirit",
+        "malum:hungry_spirit",
+        "malum:radiative_spirit",
+        "malum:thoughtful_spirit",
+        "malum:enlightened_spirit"
+    ]
+}

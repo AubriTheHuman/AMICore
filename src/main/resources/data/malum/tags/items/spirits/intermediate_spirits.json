@@ -1,0 +1,12 @@
+{
+    "replace": false,
+    "values": [
+        "malum:malicious_spirit",
+        "malum:magnetic_spirit",
+        "malum:ruinous_spirit",
+        "malum:tempestuous_spirit",
+        "malum:electric_spirit",
+        "malum:mechanical_spirit",
+        "malum:herbal_spirit"
+    ]
+}

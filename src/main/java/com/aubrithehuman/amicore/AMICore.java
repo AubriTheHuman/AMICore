@@ -1,40 +1,91 @@
 package com.aubrithehuman.amicore;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.aubrithehuman.amicore.config.AMIConfig;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.ArcFurnaceLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.AutoWorkbenchLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.CokerLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.DistillationTowerLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.FermenterLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.HydroTreaterLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.MixerLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.PressLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.RefineryLubricationHandler;
+import com.aubrithehuman.amicore.immerivepetrol.lubricator.SqueezerLubricationHandler;
+import com.aubrithehuman.amicore.item.ModItems;
+import com.aubrithehuman.amicore.malum.MalumSpiritAdditons;
+import com.aubrithehuman.fluids.FluidTagsAMI;
+
+import blusunrize.immersiveengineering.common.blocks.metal.ArcFurnaceTileEntity;
+import blusunrize.immersiveengineering.common.blocks.metal.AutoWorkbenchTileEntity;
+import blusunrize.immersiveengineering.common.blocks.metal.FermenterTileEntity;
+import blusunrize.immersiveengineering.common.blocks.metal.MetalPressTileEntity;
+import blusunrize.immersiveengineering.common.blocks.metal.MixerTileEntity;
+import blusunrize.immersiveengineering.common.blocks.metal.RefineryTileEntity;
+import blusunrize.immersiveengineering.common.blocks.metal.SqueezerTileEntity;
+import flaxbeard.immersivepetroleum.api.crafting.LubricatedHandler;
+import flaxbeard.immersivepetroleum.common.blocks.tileentities.CokerUnitTileEntity;
+import flaxbeard.immersivepetroleum.common.blocks.tileentities.DistillationTowerTileEntity;
+import flaxbeard.immersivepetroleum.common.blocks.tileentities.HydrotreaterTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.aubrithehuman.amicore.item.ModItems;
-
-import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("amicore")
 public class AMICore
 {
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "amicore";
+    
+    public static final ItemGroup ORE_TAB = new OreTab();
+	public static final ItemGroup METAL_TAB = new MetalTab();
+	public static final ItemGroup MACHINE_TAB = new MachineTab();
+	public static final ItemGroup MATERIAL_TAB = new MaterialTab();
+	public static final ItemGroup FLUID_TAB = new FluidTab();
+	public static final ItemGroup BIO_TAB = new BioTab();
+	public static final ItemGroup PETRO_TAB = new PetroTab();
+	public static final ItemGroup INTERMEDIATES_TAB = new IntermediatesTab();
+	public static final ItemGroup TOOLS_TAB = new ToolsTab();
+	
+//	public static void register() {
+//		ORE_TAB = new OreTab();
+//		METAL_TAB = new MetalTab();
+//		MACHINE_TAB = new MachineTab();
+//		FLUID_TAB = new FluidTab();
+//		MATERIAL_TAB = new MaterialTab();
+//		BIO_TAB = new BioTab();
+//	}
+	
+	
 
     public AMICore()
     {
+    	
+    	
     	IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     	
     	ModItems.register(eventBus);
-
+    	MalumSpiritAdditons.register();
+    	
+    	init();
+    	FluidTagsAMI.init();
+    	
+    	ModLoadingContext.get().registerConfig(Type.COMMON, AMIConfig.SPEC, "amicore-common.toml");
     	
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -48,10 +99,27 @@ public class AMICore
 
     	LOGGER.info("AMICore Loaded");
     }
+    
+    public static void init() {
+
+		LubricatedHandler.registerLubricatedTile(MixerTileEntity.class, MixerLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(ArcFurnaceTileEntity.class, ArcFurnaceLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(AutoWorkbenchTileEntity.class, AutoWorkbenchLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(CokerUnitTileEntity.class, CokerLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(DistillationTowerTileEntity.class, DistillationTowerLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(FermenterTileEntity.class, FermenterLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(MetalPressTileEntity.class, PressLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(RefineryTileEntity.class, RefineryLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(SqueezerTileEntity.class, SqueezerLubricationHandler::new);
+		LubricatedHandler.registerLubricatedTile(HydrotreaterTileEntity.class, HydroTreaterLubricationHandler::new);
+		
+    	LOGGER.info("AMICore Init");
+    }
 
     private void setup(final FMLCommonSetupEvent event)
     {
         // some preinit code
+    	
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -68,6 +136,104 @@ public class AMICore
 //                collect(Collectors.toList()));
     }
 
+    public static class OreTab extends ItemGroup {
+		public OreTab() {
+			super("amicore.oretab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_ORE_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class MetalTab extends ItemGroup {
+		public MetalTab() {
+			super("amicore.metaltab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_METAL_ITEM.get().getDefaultInstance();
+		}
+	};
+		
+	public static class MachineTab extends ItemGroup {
+		public MachineTab() {
+			super("amicore.machinetab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_MACHINE_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class FluidTab extends ItemGroup {
+		public FluidTab() {
+			super("amicore.fluidtab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_FLUID_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class MaterialTab extends ItemGroup {
+		public MaterialTab() {
+			super("amicore.materialtab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_MATERIAL_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class BioTab extends ItemGroup {
+		public BioTab() {
+			super("amicore.biotab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_BIO_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class PetroTab extends ItemGroup {
+		public PetroTab() {
+			super("amicore.petrotab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_PETRO_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class IntermediatesTab extends ItemGroup {
+		public IntermediatesTab() {
+			super("amicore.intermediatestab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_INTERMEDIATES_ITEM.get().getDefaultInstance();
+		}
+	};
+	
+	public static class ToolsTab extends ItemGroup {
+		public ToolsTab() {
+			super("amicore.toolstab");
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return ModItems.DUMMY_TOOLS_ITEM.get().getDefaultInstance();
+		}
+	};
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
@@ -79,6 +245,10 @@ public class AMICore
         {
             // Register a new block here
 //            LOGGER.info("HELLO from Register Block");
+        	
         }
+        
+        
+           
     }
 }

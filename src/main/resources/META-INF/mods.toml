@@ -19,7 +19,7 @@ modId="amicore" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
-version="${file.jarVersion}" #mandatory
+version="1.2" #mandatory
  # A display name for the mod
 displayName="AMICore" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -29,9 +29,9 @@ displayName="AMICore" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="" #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="AubriTheHuman" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Core mod for Aubri's Magical Industries (AMI)
@@ -54,5 +54,19 @@ Core mod for Aubri's Magical Industries (AMI)
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="[1.16.5,1.17)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.amicore]]
+    modId="curios"
+    mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[1.16.5-4.0.8.0,1.16.5-4.0.8.2]"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.amicore]]
+    modId="malum"
+    mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[1.16.5-0.3.0]"
     ordering="NONE"
     side="BOTH"

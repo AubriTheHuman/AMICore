@@ -1,0 +1,9 @@
+{
+    "replace": false,
+    "values": [
+        "malum:sacred_spirit",
+        "malum:wicked_spirit",
+        "malum:arcane_spirit",
+        "malum:eldritch_spirit"
+    ]
+}

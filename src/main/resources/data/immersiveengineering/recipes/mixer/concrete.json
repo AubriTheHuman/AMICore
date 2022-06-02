@@ -1,0 +1,22 @@
+{
+    "type": "immersiveengineering:mixer",
+    "inputs": [
+        {
+            "count": 2,
+            "base_ingredient": {
+                "item": "minecraft:sand"
+            }
+        },
+        {
+            "item": "minecraft:gravel"
+        },
+        {
+            "item": "minecraft:clay"
+        }
+    ],
+    "result": {
+        "fluid": "immersiveengineering:concrete",
+        "amount": 500
+    },
+    "energy": 3200
+}

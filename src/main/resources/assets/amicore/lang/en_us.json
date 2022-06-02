@@ -1,13 +1,31 @@
 {
-    "item.amicore.dummy_ore_item": "Dummy Ore Item",
-    "item.amicore.dummy_metal_item": "Dummy Metal Item",
-    "item.amicore.dummy_machine_item": "Dummy Machine Item",
-    "item.amicore.dummy_fluid_item": "Dummy Fluid Item",
-    "item.amicore.dummy_material_item": "Dummy Material Item",
-
-    "itemGroup.oretab": "AMICore Ores",
-    "itemGroup.metaltab": "AMICore Metals",
-    "itemGroup.machinetab": "AMICore Machines",
-    "itemGroup.fluidtab": "AMICore Fluids",
-    "itemGroup.materialtab": "AMICore Materials"
+    "itemGroup.amicore.oretab": "AMICore Ores",
+    "itemGroup.amicore.metaltab": "AMICore Metals",
+    "itemGroup.amicore.machinetab": "AMICore Machines",
+    "itemGroup.amicore.fluidtab": "AMICore Fluids",
+    "itemGroup.amicore.materialtab": "AMICore Materials",
+    "itemGroup.amicore.biotab": "AMICore Bioprocessing Products",
+    "itemGroup.amicore.petrotab": "AMICore Petrochemical Products",
+    "itemGroup.amicore.intermediatestab": "AMICore Intermediate Products",
+    "itemGroup.amicore.toolstab": "AMICore Tools",
+    
+    "item.malum.malicious_spirit": "Malicious Spirit",
+    "item.malum.magnetic_spirit": "Magnetic Spirit",
+    "item.malum.ruinous_spirit": "Ruinous Spirit",
+    "item.malum.tempestuous_spirit": "Tempestuous Spirit",
+    "item.malum.electric_spirit": "Electric Spirit",
+    "item.malum.mechanical_spirit": "Mechanical Spirit",
+    "item.malum.herbal_spirit": "Herbal Spirit",
+    
+    "item.malum.voidial_spirit": "Voidial Spirit",
+    "item.malum.deathly_spirit": "Deathly Spirit",
+    "item.malum.astral_spirit": "Astral Spirit",
+    "item.malum.corporeal_spirit": "Corporeal Spirit",
+    "item.malum.chaotic_spirit": "Chaotic Spirit",
+    "item.malum.frozen_spirit": "Frozen Spirit",
+    "item.malum.hungry_spirit": "Hungry Spirit",
+    
+    "item.malum.radiative_spirit": "Radiative Spirit",
+    "item.malum.thoughtful_spirit": "Thoughtful Spirit",
+    "item.malum.enlightened_spirit": "Enlightened Spirit"
 }

@@ -1,0 +1,12 @@
+{
+    "replace": false,
+    "values": [
+        "malum:voidial_spirit",
+        "malum:deathly_spirit",
+        "malum:astral_spirit",
+        "malum:corporeal_spirit",
+        "malum:chaotic_spirit",
+        "malum:frozen_spirit",
+        "malum:hungry_spirit"
+    ]
+}
