@@ -53,7 +53,23 @@ public class MalumSpiritAdditons {
 	
     public static void register() {
     	newSpirits.clear();
+    	newSpirits.add(MALICIOUS_SPIRIT);
+    	newSpirits.add(MAGNETIC_SPIRIT);
     	newSpirits.add(RUINOUS_SPIRIT);
+    	newSpirits.add(TEMPESTUOUS_SPIRIT);
+    	newSpirits.add(ELECTRIC_SPIRIT);
+    	newSpirits.add(MECHANICAL_SPIRIT);
+    	newSpirits.add(HERBAL_SPIRIT);
+    	newSpirits.add(VOIDIAL_SPIRIT);
+    	newSpirits.add(DEATHLY_SPIRIT);
+    	newSpirits.add(ASTRAL_SPIRIT);
+    	newSpirits.add(CORPOREAL_SPIRIT);
+    	newSpirits.add(CHAOTIC_SPIRIT);
+    	newSpirits.add(FROZEN_SPIRIT);
+    	newSpirits.add(HUNGRY_SPIRIT);
+    	newSpirits.add(RADIATIVE_SPIRIT);
+    	newSpirits.add(THOUGHTFUL_SPIRIT);
+    	newSpirits.add(ENLIGHTENED_SPIRIT);
     }
 
 }

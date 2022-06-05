@@ -61,6 +61,7 @@ public class AMICore
     	MalumSpiritAdditons.register();
     	
     	init();
+    	reorganizeTabs();
     	
     	ModLoadingContext.get().registerConfig(Type.COMMON, AMIConfig.SPEC, "amicore-common.toml");
     	
@@ -77,7 +78,43 @@ public class AMICore
     	LOGGER.info("AMICore Loaded");
     }
     
-    public static void init() {
+    private void reorganizeTabs() {
+//    	ItemGroup[] old = ItemGroup.TABS.clone();
+//    	ItemGroup[] curr = new ItemGroup[9]; 
+//    	int[] currIndexes = new int[] { ORE_TAB.getId(), METAL_TAB.getId(), MACHINE_TAB.getId(), MATERIAL_TAB.getId(), FLUID_TAB.getId(), BIO_TAB.getId(), PETRO_TAB.getId(), INTERMEDIATES_TAB.getId(), TOOLS_TAB.getId() };
+//    	ItemGroup[] move = new ItemGroup[9]; 
+//    	int[] moveIndexes = new int[9];
+//    	ItemGroup[] news = old.clone();
+//    	
+//    	System.out.println(curr.toString());
+//    	System.out.println(currIndexes.toString());
+//    	System.out.println(old.toString());
+//    	if(old.length <= 21) return;
+//    	for(int i = 12; i < 21; i++) {
+//    		move[i-12] = old[i];
+//    		moveIndexes[i-12] = old[i].getId();
+//    	}
+//    	System.out.println(move.toString());
+//    	System.out.println(moveIndexes.toString());
+//    	
+//    	for(int i = 0; i < currIndexes.length; i++) {
+//    		curr[i] = old[currIndexes[i]];
+//    	}
+//
+//    	System.out.println(curr.toString());
+//    	System.out.println(currIndexes.toString());
+//    	
+//    	for(int i = 0; i < moveIndexes.length; i++) {
+//    		news[currIndexes[i]] = move[i];
+//    		news[i+12] = curr[i];
+//    	}
+//    	System.out.println(news.toString());
+//    		
+//    	ItemGroup.TABS = news;
+	
+    }
+
+	public static void init() {
 
 		LOGGER.info("AMICore Init");
     }
