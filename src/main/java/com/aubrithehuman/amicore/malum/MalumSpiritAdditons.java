@@ -7,7 +7,6 @@ import com.aubrithehuman.amicore.item.ModItems;
 import com.sammy.malum.core.modcontent.MalumSpiritTypes;
 import com.sammy.malum.core.systems.spirits.MalumSpiritType;
 
-@SuppressWarnings("unchecked")
 public class MalumSpiritAdditons {
 	
 	//Malum spirit  additions
