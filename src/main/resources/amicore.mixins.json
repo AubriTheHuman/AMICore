@@ -2,11 +2,11 @@
   "required": true,
   "package": "com.aubrithehuman.amicore.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "amicore.refmap.json",
   "mixins": [
-    "malum.MalumSpiritAltarFixer"
+    "MixinSpiritAltarTileEntity"
   ],
-  "client": [
-  ],
-  "minVersion": "0.8"
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "amicore.mixin-refmap.json"
 }
