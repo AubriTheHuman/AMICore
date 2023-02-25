@@ -111,6 +111,9 @@ repositories {
 	maven {
         url = "https://maven.theillusivec4.top/"
     }
+    maven {
+        url 'https://maven.blakesmods.com'
+    }
     maven { url 'https://maven.blamejared.com' }
 }
 
@@ -150,14 +153,19 @@ dependencies {
     runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.2.511")
     compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.2.511")
     
-    //runtimeOnly fg.deobf("curse.maven:jei-238222:3681294")
+    implementation fg.deobf('com.blakebr0.cucumber:Cucumber:1.16.5-4.1.12')
+    implementation fg.deobf('com.blakebr0.extendedcrafting:ExtendedCrafting:1.16.5-3.1.12')
+
+    
+    runtimeOnly fg.deobf("curse.maven:jei-238222:3681294")
+    runtimeOnly fg.deobf("curse.maven:immersiveengineering-231951:3809596")
     
    // runtimeOnly fg.deobf("curse.maven:caves-and-cliffs-backport-417430:3592876") // ccbp
    // compileOnly fg.deobf("curse.maven:caves-and-cliffs-backport-417430:3592876")
    // runtimeOnly fg.deobf("curse.maven:cavebiomeapi-441706:3519248") // cavebiomeapi
     //compileOnly fg.deobf("curse.maven:cavebiomeapi-441706:3519248")
     
-    //compileOnly "mezz.jei:jei-1.16.5:7.7.1.121" //jei
+    compileOnly "mezz.jei:jei-1.16.5:7.7.1.121" //jei
     //compileOnly "mezz.jei:jei-1.16.5:7.7.1.121:api" //jei
 }
 
