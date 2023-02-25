@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.aubrithehuman.amicore.config.AMIConfig;
+import com.aubrithehuman.amicore.crafting.StabilityObject;
+import com.aubrithehuman.amicore.crafting.StabilityRegistry;
 import com.aubrithehuman.amicore.item.ModItems;
 import com.aubrithehuman.amicore.malum.MalumSpiritAdditons;
 
@@ -11,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,6 +53,21 @@ public class AMICore
 //	}
 	
 	
+//	Codec<Block> BLOCK_CODEC = ResourceLocation.CODEC.xmap(ForgeRegistries.BLOCKS::getValue, Block::getRegistryName); 
+	// DATASET
+	public static final StabilityRegistry<StabilityObject> STABILITY_OBJECTS = new StabilityRegistry<StabilityObject>("stabilityobjects", StabilityObject.CODEC, AMICore.LOGGER);
+		
+		
+	
+	
+	@SubscribeEvent
+	public void onAddReloadListeners(final AddReloadListenerEvent event)
+	{
+		LOGGER.debug("Reloading Stability Obejects!");
+		event.addListener(STABILITY_OBJECTS);
+	}
+			  
+
 
     public AMICore()
     {
@@ -74,6 +92,7 @@ public class AMICore
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+    	MinecraftForge.EVENT_BUS.addListener( this::onAddReloadListeners );
         
 
     	LOGGER.info("AMICore Loaded");
@@ -251,6 +270,7 @@ public class AMICore
 //            LOGGER.info("HELLO from Register Block");
         	
         }
+        
         
         
            

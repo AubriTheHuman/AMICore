@@ -1,0 +1,9 @@
+{
+  "factor": 0.2,
+  "block": {
+    "Name": "minecraft:dark_oak_log",
+    "Properties": {
+      "axis": "y"
+    }
+  }
+}

@@ -3,7 +3,12 @@
   "package": "com.aubrithehuman.amicore.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinSpiritAltarTileEntity"
+    "MixinSpiritAltarTileEntity",
+    "MixinPedestalTileEntity",
+    "MixinCraftingCoreTileEntity",
+    "MixinCombinationRecipe",
+    "MixinPedestalBlock",
+    "MixinCraftingCoreBlock"
   ],
   "injectors": {
     "defaultRequire": 1
