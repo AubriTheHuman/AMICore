@@ -49,6 +49,10 @@ public class SpiritAltarHandler {
 	@ZenCodeType.Method
     public static void clearMalumRecipes() {
 		MalumSpiritAltarRecipes.RECIPES.clear();
+	}
+	
+	@ZenCodeType.Method
+    public static void regenMalumRecipes() {
 		MalumSpiritAltarRecipes.init();
 	}
 	
