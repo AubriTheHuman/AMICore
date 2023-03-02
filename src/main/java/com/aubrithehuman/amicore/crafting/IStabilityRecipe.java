@@ -1,6 +1,6 @@
 package com.aubrithehuman.amicore.crafting;
 
-public interface IStabilityRecipe {
+public interface IStabilityRecipe{
 	
 	public double getInherantStability();
 

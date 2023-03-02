@@ -7,6 +7,8 @@ import com.aubrithehuman.amicore.item.ModItems;
 import com.sammy.malum.core.modcontent.MalumSpiritTypes;
 import com.sammy.malum.core.systems.spirits.MalumSpiritType;
 
+import net.minecraft.item.ItemStack;
+
 public class MalumSpiritAdditons {
 	
 	//Malum spirit  additions
@@ -69,6 +71,15 @@ public class MalumSpiritAdditons {
     	newSpirits.add(RADIATIVE_SPIRIT);
     	newSpirits.add(THOUGHTFUL_SPIRIT);
     	newSpirits.add(ENLIGHTENED_SPIRIT);
+    }
+    
+    public static MalumSpiritType getByItem(ItemStack item) {
+    	for (MalumSpiritType type : MalumSpiritTypes.SPIRITS) {
+    		if(item.getItem().equals(type.splinterItem())) {
+    			return type;
+    		}
+    	}
+    	return null;
     }
 
 }

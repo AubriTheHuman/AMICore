@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.Logger;
 
-import com.aubrithehuman.amicore.AMICore;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;

@@ -1,0 +1,1 @@
+{  "type": "extendedcrafting:combination",  "powerCost": 400000, "stability": 0.5, "input": {    "item": "minecraft:iron_ingot"  },  "ingredients": [    {      "item": "minecraft:potato"    },    {      "item": "minecraft:potato", "count": 2    }],  "result": {    "item": "minecraft:stone"  }}

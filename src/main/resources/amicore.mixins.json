@@ -7,8 +7,13 @@
     "MixinPedestalTileEntity",
     "MixinCraftingCoreTileEntity",
     "MixinCombinationRecipe",
+    "MixinCombinationRecipeSeiralizer",
     "MixinPedestalBlock",
-    "MixinCraftingCoreBlock"
+    "MixinCraftingCoreBlock",
+    "MixinParticleManager",
+    "MixinSpiritJarTileEntity",
+    "MixinSpiritJarBlock",
+    "MixinCombinationCraftingCategory"
   ],
   "injectors": {
     "defaultRequire": 1

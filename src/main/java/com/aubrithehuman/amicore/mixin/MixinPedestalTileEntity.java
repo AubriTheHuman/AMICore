@@ -1,4 +1,4 @@
-package com.aubrithehuman.amicore.mixin;
+                             package com.aubrithehuman.amicore.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,6 +15,11 @@ public abstract class MixinPedestalTileEntity {
 
 	@Shadow
 	public final BaseItemStackHandler inventory;
+	
+	public MixinPedestalTileEntity() {
+		inventory = null;
+	}
+	
 	
 	@Inject(method = "<init>*", at = @At("RETURN"))
     public void constructorTail(CallbackInfo ci) {

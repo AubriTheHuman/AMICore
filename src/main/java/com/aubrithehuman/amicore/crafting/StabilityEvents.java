@@ -13,6 +13,7 @@ import com.sammy.malum.core.systems.tileentities.SimpleInventoryTileEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.EndermanEntity;
@@ -68,7 +69,7 @@ public class StabilityEvents {
 			effects.addEntry("hallucinate", 1);
 			effects.addEntry("lightning", 4);	
 			effects.addEntry("mobs", 2);
-			effects.addEntry("pedestalPop", 4);				
+			effects.addEntry("pedestalPop", 2);				
 		} else if(stability > 17.0) {
 			effects.addEntry("spark", 8);
 			effects.addEntry("hallucinate", 1);
@@ -245,7 +246,7 @@ public class StabilityEvents {
 	
 	private static void spawnMob(Entity spawn, BlockPos pos, World level) {
 		int i = 0;
-		BlockPos offsett = pos;
+		BlockPos offsett = pos.offset(0.5, 1.2, 0.5);
 		while (i < 10) {
 			BlockPos temp = pos.offset(6 - level.random.nextInt(13), 0, 6 - level.random.nextInt(13));
 			if(level.getBlockState(temp).getBlock().equals(Blocks.AIR)) {
@@ -269,8 +270,8 @@ public class StabilityEvents {
 	public static void lightning(World level, BlockPos pos, TileEntity core, double stability) {
 //		System.out.println("lightning!");
 		//x y z r
-		List<Entity> nearestEntities = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(pos.offset(-10, -5, -10), pos.offset(10, 5, 10)));
-		for (int i = 0; i < stability / 5; i++) {
+		List<Entity> nearestEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(pos.offset(-10, -5, -10), pos.offset(10, 5, 10)));
+		for (int i = 0; i < stability / 10; i++) {
 			LightningBoltEntity strike = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, level);
 			if(nearestEntities.size() > 0) {
 				int rand = level.random.nextInt(nearestEntities.size());
