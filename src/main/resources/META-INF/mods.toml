@@ -70,3 +70,10 @@ Core mod for AMI modpack.
     versionRange="[1.16.5-4.0.8.2]"
     ordering="NONE"
     side="BOTH"
+[[dependencies.examplemod]]
+    modId="jei"
+    mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[1.16.5-7.7.1.121]"
+    ordering="NONE"
+    side="BOTH"
