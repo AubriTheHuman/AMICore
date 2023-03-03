@@ -571,12 +571,12 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 	
 	@Override
 	public double getSearchRangeXZ() {
-		return 5.0;
+		return 8.0;
 	}
 	
 	@Override
 	public double getSearchRangeY() {
-		return 3.0;
+		return 2.0;
 	}
 
 	@Override
