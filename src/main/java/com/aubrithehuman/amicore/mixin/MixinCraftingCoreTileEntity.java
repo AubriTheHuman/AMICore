@@ -205,6 +205,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
   		((IServerParticle) c).repeatServer(level, x, y, z, 4);
             
         } else {
+        	velY = 0.25D;
     		world.sendParticles(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
         }
         
