@@ -36,6 +36,8 @@ public class ModItems {
 			() -> new Item(new Item.Properties()));	
 	public static final RegistryObject<Item> DUMMY_TOOLS_ITEM = ITEMS.register("dummy_tools_item", 
 			() -> new Item(new Item.Properties()));	
+	public static final RegistryObject<Item> DUMMY_WORKINGTREE_ITEM = ITEMS.register("dummy_workingtree_item", 
+			() -> new Item(new Item.Properties()));	
 	
 	//Malum spirits
     public static final RegistryObject<Item> MALICIOUS_SPIRIT = MALUM_ITEMS.register("malicious_spirit", () -> new SpiritItem(MalumItems.SPLINTER_PROPERTIES(), MalumSpiritAdditons.MALICIOUS_SPIRIT));
