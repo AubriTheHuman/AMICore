@@ -98,7 +98,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 36, 36, 36, 256, 256);	  
 	        	        break;
 	        		}
-	        		case "t_joint_arrow": {
+	        		case "half_line": {
 	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 72, 36, 36, 256, 256);	  
 	        	        break;
 	        		}
@@ -119,19 +119,19 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        	        break;
 	        		}
 	        		case "slot": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 190, 238, 18, 18, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 144, 48, 18, 18, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "slot_medium": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 208, 234, 22, 22, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 144, 26, 22, 22, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "slot_large": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 230, 230, 26, 26, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 144, 0, 26, 26, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "fire": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 174, 240, 16, 16, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 144, 66, 16, 16, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "tool": {
@@ -210,9 +210,6 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 		List<List<ItemStack>> outputsI = ingredients.getOutputs(VanillaTypes.ITEM);
 		List<List<FluidStack>> outputsF = ingredients.getOutputs(VanillaTypes.FLUID);
 		List<ItemStack> input = ingredients.getInputs(VanillaTypes.ITEM).get(0);
-
-		stacks.init(0, false, stackmap.get(0).getSecond().x, stackmap.get(0).getSecond().y);
-		stacks.set(0, input);
 		
 		int i = 0;
 		for (; i < outputsI.size(); i++) {

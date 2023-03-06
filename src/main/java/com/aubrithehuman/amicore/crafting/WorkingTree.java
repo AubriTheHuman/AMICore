@@ -171,7 +171,9 @@ public class WorkingTree {
 		SOLDERER(31, "solderer"),
 		SPANNER(32, "spanner"),
 		TROWEL(33, "trowel"),
-		TSQUARE(34, "tsquare");
+		TSQUARE(34, "tsquare"),
+		CRUSHER(35, "crusher"),
+		PRESS(36, "press");
 		
 		int id;
 		String name;
