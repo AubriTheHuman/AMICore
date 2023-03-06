@@ -36,7 +36,7 @@ public class JEIHandler implements IModPlugin
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry)
     {
-        registry.addRecipeCatalyst(new ItemStack(ModItems.DUMMY_WORKINGTREE_ITEM.get()), WorkingTreeJEICatagory.UID);
+//        registry.addRecipeCatalyst(new ItemStack(ModItems.DUMMY_WORKINGTREE_ITEM.get()), WorkingTreeJEICatagory.UID);
         registry.addRecipeCatalyst(new ItemStack(com.blakebr0.extendedcrafting.init.ModBlocks.CRAFTING_CORE.get()), StabilityObjectsJEICatagory.UID);
         registry.addRecipeCatalyst(new ItemStack(com.blakebr0.extendedcrafting.init.ModBlocks.PEDESTAL.get()), StabilityObjectsJEICatagory.UID);
     }

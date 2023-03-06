@@ -164,9 +164,9 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        		}
         		}
         	} else if(s.getDisplayable() instanceof Ingredient) {
-        		if(s.getDrawSlot()) blit(matrixStack, s.getX(), s.getY(), 190, 238, 18, 18, 256, 256);        		
+        		if(s.getDrawSlot()) blit(matrixStack, s.getX(), s.getY(), 144, 48, 18, 18, 256, 256);        		
         	} else if (s.getDisplayable() instanceof FluidStack) {
-        		if(s.getDrawSlot()) blit(matrixStack, s.getX() - 1, s.getY() - 1, 190, 238, 18, 18, 256, 256);
+        		if(s.getDrawSlot()) blit(matrixStack, s.getX() - 1, s.getY() - 1, 144, 48, 18, 18, 256, 256);
         	}
         }
         
@@ -210,6 +210,9 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 		List<List<ItemStack>> outputsI = ingredients.getOutputs(VanillaTypes.ITEM);
 		List<List<FluidStack>> outputsF = ingredients.getOutputs(VanillaTypes.FLUID);
 		List<ItemStack> input = ingredients.getInputs(VanillaTypes.ITEM).get(0);
+
+		stacks.init(0, false, stackmap.get(0).getSecond().x, stackmap.get(0).getSecond().y);
+		stacks.set(0, input);
 		
 		int i = 0;
 		for (; i < outputsI.size(); i++) {
