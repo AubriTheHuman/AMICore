@@ -1,5 +1,6 @@
 package com.aubrithehuman.amicore.crafting;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -77,6 +78,12 @@ public class StabilityRegistry<T> extends JsonReloadListener {
 	public T getData(ResourceLocation id)
 	{
 		return this.data.get(id);
+	}
+	
+	@Nullable
+	public Collection<T> getData()
+	{
+		return this.data.values();
 	}
 	
 	public boolean hasKey(ResourceLocation id) {

@@ -9,6 +9,7 @@
     "itemGroup.amicore.intermediatestab": "AMICore Intermediate Products",
     "itemGroup.amicore.toolstab": "AMICore Tools",
     
+    "jei.category.amicore.stabilityobjects": "Stability Objects",
     "jei.category.amicore.aworkingtree": "Processing Tree",
     "item.amicore.dummy_workingtree_item": "Processing Tree",
     
