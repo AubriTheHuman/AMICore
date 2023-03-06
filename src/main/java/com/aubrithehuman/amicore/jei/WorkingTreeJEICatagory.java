@@ -25,14 +25,18 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(AMICore.MOD_ID, "textures/gui/aworkingtree_jei.png");
+	private static final ResourceLocation ICONS = new ResourceLocation(AMICore.MOD_ID, "textures/gui/icons_workingtree_jei.png");
 	public static final ResourceLocation UID = new ResourceLocation(AMICore.MOD_ID, "aworkingtree");
 
 	private final IDrawable background;
@@ -79,30 +83,39 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
     {
         background.draw(matrixStack);
         Minecraft minecraft = Minecraft.getInstance();
+        FontRenderer font = minecraft.font;
 
-        minecraft.getTextureManager().bind(TEXTURE);
+        minecraft.getTextureManager().bind(ICONS);
         for (Step s : recipe.getSteps()) {
         	if(s.getDisplayable() instanceof String) {
         		String key = (String) s.getDisplayable();
         		switch (key) {
-	        		case "line": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 224, 0 + (s.getDirection().getLevel() * 16), 16, 16, 256, 256);	  
-	        	        break;
-	        		}
-	        		case "arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 240, 0 + (s.getDirection().getLevel() * 16), 16, 16, 256, 256);	  
-	        	        break;
-	        		}
 	        		case "long_arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 0 + (s.getDirection().getLevel() * 26), 216, 26, 26, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 0, 36, 36, 256, 256);		
 	        	        break;
 	        		}
 	        		case "clock_arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 202, 0 + (s.getDirection().getLevel() * 22), 22, 22, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 36, 36, 36, 256, 256);	  
+	        	        break;
+	        		}
+	        		case "t_joint_arrow": {
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 72, 36, 36, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "anti_clock_arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 180, 0 + (s.getDirection().getLevel() * 22), 22, 22, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 108, 36, 36, 256, 256);	  
+	        	        break;
+	        		}
+	        		case "line": {
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 144, 36, 36, 256, 256);	  
+	        	        break;
+	        		}
+	        		case "arrow": {
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 180, 36, 36, 256, 256);	  
+	        	        break;
+	        		}
+	        		case "branch_arrow": {
+	        	        blit(matrixStack, s.getX() , s.getY(), 18, 18, 0 + (s.getDirection().getLevel() * 36), 216, 36, 36, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "slot": {
@@ -118,7 +131,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        	        break;
 	        		}
 	        		case "fire": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 104, 216, 16, 16, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 174, 240, 16, 16, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "tool": {
@@ -128,7 +141,24 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        	        blit(matrixStack, s.getX() , s.getY(), x, y, 16, 16, 256, 256);	  
 	        	        break;
 	        		}
-	        		
+	        		case "text": {
+	        	        //blit(matrixStack, s.getX() , s.getY(), 174, 240, 16, 16, 256, 256);	  
+	        	        StringTextComponent str = new StringTextComponent(s.getTooltip());
+	        	        for(TextFormatting t : (List<TextFormatting>) s.getToolTipFormats()) {
+	        	        	str.withStyle(t);
+	        	        }
+	        	        font.draw(matrixStack, str, s.getX(), s.getY(), 0);
+	        	        break;
+	        		}
+	        		case "text_shadow": {
+	        	        //blit(matrixStack, s.getX() , s.getY(), 174, 240, 16, 16, 256, 256);	  
+	        	        StringTextComponent str = new StringTextComponent(s.getTooltip());
+	        	        for(TextFormatting t : (List<TextFormatting>) s.getToolTipFormats()) {
+	        	        	str.withStyle(t);
+	        	        }
+	        	        font.drawShadow(matrixStack, str, s.getX(), s.getY(), 0);
+	        	        break;
+	        		}
 	        		default: {
 	        			break;
 	        		}

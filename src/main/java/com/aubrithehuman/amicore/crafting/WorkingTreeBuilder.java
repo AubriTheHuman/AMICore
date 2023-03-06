@@ -16,6 +16,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 @ZenRegister
@@ -96,6 +97,26 @@ public class WorkingTreeBuilder {
 	@ZenCodeType.Method
     public WorkingTreeBuilder addLine(int x, int y, String dir) {
 		return this.addDrawableObject("line", "none", x, y, dir);
+	}
+	
+	@ZenCodeType.Method
+    public WorkingTreeBuilder addText(int x, int y, String string, String[] color) {
+		Step s = new Step<String>("text", x, y).addDirection(GuiDirection.NONE).addTooltip(string);
+		for (String str : color) {
+			s.addTooltipFormatting(TextFormatting.getByName(str.toUpperCase()));
+		}
+		build.addStep(s);
+		return this;
+	}
+	
+	@ZenCodeType.Method
+    public WorkingTreeBuilder addTextShadow(int x, int y, String string, String[] color) {
+		Step s = new Step<String>("text_shadow", x, y).addDirection(GuiDirection.NONE).addTooltip(string);
+		for (String str : color) {
+			s.addTooltipFormatting(TextFormatting.getByName(str.toUpperCase()));
+		}
+		build.addStep(s);
+		return this;
 	}
 	
 	@ZenCodeType.Method

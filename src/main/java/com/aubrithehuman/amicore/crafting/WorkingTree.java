@@ -3,6 +3,8 @@ package com.aubrithehuman.amicore.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.text.TextFormatting;
+
 public class WorkingTree {
 
 		
@@ -38,6 +40,7 @@ public class WorkingTree {
 	public static class Step<T> {
 		
 		String tooltip = "";
+		List<TextFormatting> toolTipFormat = new ArrayList<TextFormatting>();
 		final T display;
 		final int x;
 		final int y;
@@ -71,6 +74,11 @@ public class WorkingTree {
 			return this;
 		}
 		
+		public Step addTooltipFormatting(TextFormatting format) {
+			this.toolTipFormat.add(format);
+			return this;
+		}
+		
 		public int getX() {
 			return x;
 		}
@@ -97,6 +105,10 @@ public class WorkingTree {
 		
 		public DrawableTypes getDrawableType() {
 			return drawableType;
+		}
+
+		public List<TextFormatting> getToolTipFormats() {
+			return this.toolTipFormat;
 		}
 	}
 	
