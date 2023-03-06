@@ -9,7 +9,8 @@
     "itemGroup.amicore.intermediatestab": "AMICore Intermediate Products",
     "itemGroup.amicore.toolstab": "AMICore Tools",
     
-    "jei.category.amicore.workingtree": "Processing Tree",
+    "jei.category.amicore.aworkingtree": "Processing Tree",
+    "item.amicore.dummy_workingtree_item": "Processing Tree",
     
     "item.malum.malicious_spirit": "Malicious Spirit",
     "item.malum.magnetic_spirit": "Magnetic Spirit",

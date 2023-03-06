@@ -45,25 +45,25 @@ public class WorkingTreeBuilder {
 	
 	@ZenCodeType.Method
     public WorkingTreeBuilder addItem(IIngredient i, int x, int y, boolean drawSlot) {
-		build.addStep(new Step<Ingredient>(toIngredient(i).get(0), x, y).setDrawSlot(drawSlot));
+		build.addStep(new Step<Ingredient>(i.asVanillaIngredient(), x, y).setDrawSlot(drawSlot));
 		return this;
 	}
 	
 	@ZenCodeType.Method
     public WorkingTreeBuilder addItemWithToolTip(IIngredient i, int x, int y, boolean drawSlot, String tooltip) {
-		build.addStep(new Step<Ingredient>(toIngredient(i).get(0), x, y).setDrawSlot(drawSlot).addTooltip(tooltip));
+		build.addStep(new Step<Ingredient>(i.asVanillaIngredient(), x, y).setDrawSlot(drawSlot).addTooltip(tooltip));
 		return this;
 	}
 	
 	@ZenCodeType.Method
     public WorkingTreeBuilder addStep(IIngredient i, int x, int y) {
-		build.addStep(new Step<Ingredient>(toIngredient(i).get(0), x, y).setDrawSlot(false));
+		build.addStep(new Step<Ingredient>(i.asVanillaIngredient(), x, y).setDrawSlot(false));
 		return this;
 	}
 	
 	@ZenCodeType.Method
     public WorkingTreeBuilder addStepWithToolTip(IIngredient i, int x, int y, String tooltip) {
-		build.addStep(new Step<Ingredient>(toIngredient(i).get(0), x, y).addTooltip(tooltip).setDrawSlot(false));
+		build.addStep(new Step<Ingredient>(i.asVanillaIngredient(), x, y).addTooltip(tooltip).setDrawSlot(false));
 		return this;
 	}
 	
@@ -118,11 +118,11 @@ public class WorkingTreeBuilder {
 		return this;
 	}
 	
-	private static NonNullList<Ingredient> toIngredient(IIngredient... ingredients) {
-		return Arrays.stream(ingredients)
-				.map(IIngredient::asVanillaIngredient)
-				.collect(Collectors.toCollection(NonNullList::create));
-	}
+//	private static NonNullList<Ingredient> toIngredient(IIngredient... ingredients) {
+//		return Arrays.stream(ingredients)
+//				.map(IIngredient::asVanillaIngredient)
+//				.collect(Collectors.toCollection(NonNullList::create));
+//	}
 	
 	
 }

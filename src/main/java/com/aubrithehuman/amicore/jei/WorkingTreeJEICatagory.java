@@ -32,8 +32,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(AMICore.MOD_ID, "textures/gui/workingtree_jei.png");
-	public static final ResourceLocation UID = new ResourceLocation(AMICore.MOD_ID, "workingtree");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(AMICore.MOD_ID, "textures/gui/aworkingtree_jei.png");
+	public static final ResourceLocation UID = new ResourceLocation(AMICore.MOD_ID, "aworkingtree");
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -55,7 +55,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 
 	@Override
 	public String getTitle() {
-		return Localizable.of("jei.category.amicore.workingtree").buildString();
+		return Localizable.of("jei.category.amicore.aworkingtree").buildString();
 	}
 
 	@Override
@@ -86,11 +86,11 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
         		String key = (String) s.getDisplayable();
         		switch (key) {
 	        		case "line": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 226, 0 + (s.getDirection().getLevel() * 15), 15, 15, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 224, 0 + (s.getDirection().getLevel() * 16), 16, 16, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 241, 0 + (s.getDirection().getLevel() * 15), 15, 15, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 240, 0 + (s.getDirection().getLevel() * 16), 16, 16, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "long_arrow": {
@@ -98,11 +98,11 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        	        break;
 	        		}
 	        		case "clock_arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 204, 0 + (s.getDirection().getLevel() * 22), 22, 22, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 202, 0 + (s.getDirection().getLevel() * 22), 22, 22, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "anti_clock_arrow": {
-	        	        blit(matrixStack, s.getX() , s.getY(), 182, 0 + (s.getDirection().getLevel() * 22), 22, 22, 256, 256);	  
+	        	        blit(matrixStack, s.getX() , s.getY(), 180, 0 + (s.getDirection().getLevel() * 22), 22, 22, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "slot": {
@@ -115,6 +115,10 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        		}
 	        		case "slot_large": {
 	        	        blit(matrixStack, s.getX() , s.getY(), 230, 230, 26, 26, 256, 256);	  
+	        	        break;
+	        		}
+	        		case "fire": {
+	        	        blit(matrixStack, s.getX() , s.getY(), 104, 216, 16, 16, 256, 256);	  
 	        	        break;
 	        		}
 	        		case "tool": {
@@ -144,7 +148,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	public void setIngredients(WorkingTree recipe, IIngredients ingredients) {
 		stackmap = new ArrayList<Pair<Object,Point>>();
 		ItemStack out = ((Ingredient) recipe.getStep(0).getDisplayable()).getItems()[0];
-		ingredients.setOutput(VanillaTypes.ITEM, out);
+		ingredients.setInput(VanillaTypes.ITEM, out);
 		stackmap.add(new Pair<Object, Point>(out, new Point(recipe.getStep(0).getX(), recipe.getStep(0).getY())));
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		List<FluidStack> fluids = new ArrayList<FluidStack>();
@@ -164,8 +168,8 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 				stackmap.add(new Pair<Object, Point>(f, new Point(s.getX(), s.getY())));			
 			}
 		}
-		ingredients.setInputs(VanillaTypes.ITEM, items);	
-		ingredients.setInputs(VanillaTypes.FLUID, fluids);	
+		ingredients.setOutputs(VanillaTypes.ITEM, items);	
+		ingredients.setOutputs(VanillaTypes.FLUID, fluids);	
 	}
 
 	@Override
@@ -173,24 +177,24 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 		IGuiItemStackGroup stacks = layout.getItemStacks();
 		IGuiFluidStackGroup fluidStacks = layout.getFluidStacks();
 
-		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		List<List<FluidStack>> inputsF = ingredients.getInputs(VanillaTypes.FLUID);
-		List<ItemStack> outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
+		List<List<ItemStack>> outputsI = ingredients.getOutputs(VanillaTypes.ITEM);
+		List<List<FluidStack>> outputsF = ingredients.getOutputs(VanillaTypes.FLUID);
+		List<ItemStack> input = ingredients.getInputs(VanillaTypes.ITEM).get(0);
 
 		stacks.init(0, false, stackmap.get(0).getSecond().x, stackmap.get(0).getSecond().y);
-		stacks.set(0, outputs);
+		stacks.set(0, input);
 		
 		int i = 0;
-		for (; i < inputs.size(); i++) {
+		for (; i < outputsI.size(); i++) {
 			stacks.init(i+1, true, stackmap.get(i+1).getSecond().x, stackmap.get(i+1).getSecond().y);
-			stacks.set(i+1, inputs.get(i));
+			stacks.set(i+1, outputsI.get(i));
 		}
 		
 		int k = i + 1;
 		i = 0;
-		for (; i < inputsF.size(); i++) {
+		for (; i < outputsF.size(); i++) {
 			fluidStacks.init(i + k, true, stackmap.get(i + k).getSecond().x, stackmap.get(i + k).getSecond().y, 16, 16, 1, false, null);
-			fluidStacks.set(i + k, inputsF.get(i));
+			fluidStacks.set(i + k, outputsF.get(i));
 		}
 	}
 
