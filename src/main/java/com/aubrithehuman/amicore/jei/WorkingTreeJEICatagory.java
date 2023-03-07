@@ -43,7 +43,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	private final IDrawable icon;
 
 	public WorkingTreeJEICatagory(IGuiHelper helper) {
-		this.background = helper.createDrawable(TEXTURE, 0, 0, 180, 180);
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 180, 210);
 		this.icon = helper.createDrawableIngredient(new ItemStack(ModItems.DUMMY_WORKINGTREE_ITEM.get()));
 	}
 

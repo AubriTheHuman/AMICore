@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.aubrithehuman.amicore.AMICore;
 import com.aubrithehuman.amicore.crafting.WorkingTreeBuilder;
 import com.aubrithehuman.amicore.item.ModItems;
+import com.sammy.malum.core.init.items.MalumItems;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -39,6 +40,7 @@ public class JEIHandler implements IModPlugin
 //        registry.addRecipeCatalyst(new ItemStack(ModItems.DUMMY_WORKINGTREE_ITEM.get()), WorkingTreeJEICatagory.UID);
         registry.addRecipeCatalyst(new ItemStack(com.blakebr0.extendedcrafting.init.ModBlocks.CRAFTING_CORE.get()), StabilityObjectsJEICatagory.UID);
         registry.addRecipeCatalyst(new ItemStack(com.blakebr0.extendedcrafting.init.ModBlocks.PEDESTAL.get()), StabilityObjectsJEICatagory.UID);
+        registry.addRecipeCatalyst(new ItemStack(MalumItems.STAINED_SPIRIT_RESONATOR.get()), StabilityObjectsJEICatagory.UID);
     }
     
     @Nonnull

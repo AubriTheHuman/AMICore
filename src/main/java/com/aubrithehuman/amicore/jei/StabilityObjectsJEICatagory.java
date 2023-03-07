@@ -7,6 +7,7 @@ import com.aubrithehuman.amicore.AMICore;
 import com.aubrithehuman.amicore.crafting.StabilityObject;
 import com.blakebr0.cucumber.util.Localizable;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.sammy.malum.core.init.items.MalumItems;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -33,7 +34,7 @@ public class StabilityObjectsJEICatagory implements IRecipeCategory<StabilityObj
 
 	public StabilityObjectsJEICatagory(IGuiHelper helper) {
 		this.background = helper.createDrawable(TEXTURE, 0, 0, 116, 24);
-		this.icon = helper.createDrawableIngredient(new ItemStack(com.blakebr0.extendedcrafting.init.ModBlocks.CRAFTING_CORE.get()));
+		this.icon = helper.createDrawableIngredient(new ItemStack(MalumItems.STAINED_SPIRIT_RESONATOR.get()));
 	}
 
 	@Override
