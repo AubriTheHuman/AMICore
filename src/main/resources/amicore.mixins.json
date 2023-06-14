@@ -13,7 +13,8 @@
     "MixinParticleManager",
     "MixinSpiritJarTileEntity",
     "MixinSpiritJarBlock",
-    "MixinCombinationCraftingCategory"
+    "MixinCombinationCraftingCategory",
+    "MixinExtendedCraftingJeiCompat"
   ],
   "injectors": {
     "defaultRequire": 1

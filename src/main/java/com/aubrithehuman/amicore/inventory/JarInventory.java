@@ -17,11 +17,11 @@ public class JarInventory extends ItemStackHandler {
     private final Runnable onContentsChanged;
     private final Map<Integer, Integer> slotSizeMap;
     private BiFunction<Integer, ItemStack, Boolean> slotValidator = null;
-    private int maxStackSize = 32768;
+    private int maxStackSize = 64;
     private int[] outputSlots = null;
 
     public JarInventory() {
-        this(1, null);
+        this(64, null);
     }
 
     public JarInventory(int size, Runnable onContentsChanged) {
@@ -94,6 +94,62 @@ public class JarInventory extends ItemStackHandler {
 
     public IInventory toIInventory() {
         return new Inventory(this.stacks.toArray(new ItemStack[0]));
+    }
+    
+    /**
+     * Finds the last slot in the inventory with an item in it.
+     * @return
+     */
+    public int getLastFilledSlot() {
+    	for(int i = this.getSlots() - 1; i >= 0; i--) {
+    		if(!this.getStackInSlot(i).isEmpty()) 
+    	    	return i;
+    	}
+    	return 0;
+    }
+    
+    public void insertStackInLastSlot(ItemStack stack) {
+    	int lastFilled = getLastFilledSlot();
+    	ItemStack lastStack = this.getStackInSlot(lastFilled);
+    	
+    	if(lastStack.isEmpty()) {
+    		this.setStackInSlot(lastFilled, stack);
+    		return;
+    	}
+    	
+    	//add to last existing stack if space
+    	if(lastStack.getCount() < 64) {
+    		//how much do we need to get to 64 items
+    		int neededDifference = 64 - lastStack.getCount();
+
+    		//combine the two stacks and if this is 1 then the new size of last stack is 64, else its the remainder
+    		int full = (lastStack.getCount() + stack.getCount()) / 64;
+    		//combine the two stacks and the remainder is the new size of insert stack
+    		int remain = (lastStack.getCount() + stack.getCount()) % 64;
+    		
+    		
+    		lastStack.setCount(full >= 1 ? 64 : remain);
+    		
+    		//then subtract the difference from the input stack, if its now less than 0 delete it
+    		stack.setCount(stack.getCount() - neededDifference);
+    		if(stack.getCount() <= 0) {
+    			stack = ItemStack.EMPTY;
+    		}
+    	}
+    	 
+    	//are we at the last slot, if not then add the remaining stack in the next slot
+    	if(!(lastFilled >= this.getSlots() - 1) && !stack.isEmpty()) {
+    		this.setStackInSlot(lastFilled + 1, stack.copy());
+    		stack = ItemStack.EMPTY;
+    	}
+    }
+    
+    public int getTotal() {
+    	int count = 0;
+    	for (int i = getLastFilledSlot(); i >= 0; i--) {
+    		count += this.getStackInSlot(i).getCount();
+    	}
+    	return count;
     }
 
     /**

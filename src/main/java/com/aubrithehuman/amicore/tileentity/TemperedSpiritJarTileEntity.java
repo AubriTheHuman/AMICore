@@ -22,9 +22,9 @@ public class TemperedSpiritJarTileEntity extends BaseTileEntity {
 	
 	public TemperedSpiritJarTileEntity() {
 		super(ModTileEntities.TEMPERED_JAR.get());
-		this.inventory = new JarInventory(1, this::markDirtyAndDispatch);
+		this.inventory = new JarInventory(64, this::markDirtyAndDispatch);
 
-		this.inventory.setDefaultSlotLimit(32768);
+		this.inventory.setDefaultSlotLimit(64);
 	}
 
 	public ItemStackHandler getInventory() {

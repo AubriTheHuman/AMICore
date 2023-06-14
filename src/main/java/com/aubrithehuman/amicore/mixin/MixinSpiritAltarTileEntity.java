@@ -1,4 +1,4 @@
-package com.aubrithehuman.amicore.mixin;
+ package com.aubrithehuman.amicore.mixin;
 
 import static com.sammy.malum.network.NetworkManager.INSTANCE;
 

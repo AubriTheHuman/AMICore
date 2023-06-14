@@ -1,7 +1,9 @@
 package com.aubrithehuman.amicore.block;
 
 import com.aubrithehuman.amicore.inventory.JarInventory;
+import com.aubrithehuman.amicore.item.ModItems;
 import com.aubrithehuman.amicore.tileentity.TemperedSpiritJarTileEntity;
+import com.blakebr0.cucumber.block.BaseBlock;
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
@@ -33,18 +35,19 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-public class TemperedSpiritJar extends BaseTileEntityBlock  {
+public class TemperedSpiritJar extends Block  {
 
 	public static final VoxelShape JAR_SHAPE = new VoxelShapeBuilder()
-			.cuboid(13, 14, 13, 3, 2, 3)
-			.cuboid(15, 2, 15, 1, 0, 1)
-			.cuboid(14, 16, 14, 2, 14, 2)
+			.cuboid(2.5, 0.5, 2.5, 13.5, 13.5, 13.5)
+			.cuboid(3.5, 14.5, 3.5, 12.5, 16.5, 12.5)
+			.cuboid(4.5, 13.5, 4.5, 11.5, 14.5, 11.5)
+			.cuboid(5.5, 0, 5.5, 10.5, 1, 10.5)
 			.build();
 	
 	public TemperedSpiritJar() {
-		super(Material.GLASS, SoundType.GLASS, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Properties.of(Material.GLASS).sound(SoundType.GLASS).strength(5.0f, 10.0f).harvestTool(ToolType.PICKAXE).noOcclusion());
 	}
-
+	
 	@Override
     public boolean hasTileEntity(BlockState state) {
         return true;
@@ -62,11 +65,11 @@ public class TemperedSpiritJar extends BaseTileEntityBlock  {
 			TemperedSpiritJarTileEntity jar = (TemperedSpiritJarTileEntity) tile;
 			if(jar.getInventory() instanceof JarInventory) {
 				JarInventory inventory = (JarInventory) jar.getInventory();
-				ItemStack input = inventory.getStackInSlot(0);
+				ItemStack input = inventory.getStackInSlot(inventory.getLastFilledSlot());
 				ItemStack held = player.getItemInHand(hand);
 				if (input.isEmpty() && !held.isEmpty()) {
 					if(held.getItem() instanceof SpiritItem) {
-						inventory.setStackInSlot(0, StackHelper.withSize(held, held.getCount(), false));
+						inventory.insertStackInLastSlot(StackHelper.withSize(held, held.getCount(), false));
 						player.setItemInHand(hand, StackHelper.shrink(held, held.getCount(), false));
 						world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 					}
@@ -75,18 +78,22 @@ public class TemperedSpiritJar extends BaseTileEntityBlock  {
 						//need to match type!
 						if(held.getItem() == input.getItem()) {
 							//increment based on what already exists
-							inventory.setStackInSlot(0, StackHelper.withSize(held, held.getCount() + input.getCount(), false));
+							inventory.insertStackInLastSlot(StackHelper.withSize(held, held.getCount(), false));
 							player.setItemInHand(hand, StackHelper.shrink(held, held.getCount(), false));
 							world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);							
 						}
 					}
-				}  else if (!input.isEmpty() && player.isCrouching() && held.isEmpty()) {
+				} else if (!input.isEmpty() && player.isCrouching() && held.isEmpty()) {
 					ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), input);
 					item.setNoPickUpDelay();
 					world.addFreshEntity(item);
-					inventory.setStackInSlot(0, ItemStack.EMPTY);
-				} else if(!input.isEmpty() && player.isCrouching() && (held.getItem().getRegistryName().equals(MalumItems.HALLOWED_SPIRIT_RESONATOR.get().getRegistryName()) || held.getItem().getRegistryName().equals(MalumItems.STAINED_SPIRIT_RESONATOR.get().getRegistryName()))) {
-					player.sendMessage(new StringTextComponent("Jar Contents: " + input.getItem().getName(input) + "*" + input.getCount()).withStyle(TextFormatting.AQUA), player.getUUID());
+					inventory.setStackInSlot(inventory.getLastFilledSlot(), ItemStack.EMPTY);
+				}
+				
+				if(!input.isEmpty() && held.getItem().equals(MalumItems.HALLOWED_SPIRIT_RESONATOR.get())) {
+					if(!world.isClientSide()) {
+						player.sendMessage(new StringTextComponent("Jar Contents: " + input.getItem().getRegistryName().toString() + "*" + inventory.getTotal()).withStyle(TextFormatting.AQUA), player.getUUID());
+					}
 				}
 			}
 		}

@@ -9,7 +9,6 @@ import com.aubrithehuman.amicore.crafting.StabilityObject;
 import com.aubrithehuman.amicore.crafting.StabilityRegistry;
 import com.aubrithehuman.amicore.item.ModItems;
 import com.aubrithehuman.amicore.malum.MalumSpiritAdditons;
-import com.aubrithehuman.amicore.recipe.ArtisanToExtendedAutotableTranslator;
 import com.aubrithehuman.amicore.tileentity.ModTileEntities;
 
 import net.minecraft.block.Block;
@@ -18,12 +17,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
@@ -92,6 +91,7 @@ public class AMICore
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
      
         //Using Cucumber/Extended Crafting registry system
         FMLJavaModLoadingContext.get().getModEventBus().register(new ModBlocks());
@@ -166,6 +166,12 @@ public class AMICore
 //                map(m->m.messageSupplier().get()).
 //                collect(Collectors.toList()));
     }
+    
+    @SubscribeEvent
+	public void onClientSetup(FMLClientSetupEvent event) {
+		ModTileEntities.onClientSetup();
+		ModBlocks.onClientSetup();
+	}
 
     public static class OreTab extends ItemGroup {
 		public OreTab() {

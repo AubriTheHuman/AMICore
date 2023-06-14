@@ -6,16 +6,22 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.aubrithehuman.amicore.AMICore;
+import com.aubrithehuman.amicore.client.tesr.TemperedJarRenderer;
 import com.aubrithehuman.amicore.item.ModItems;
 import com.blakebr0.cucumber.item.BaseBlockItem;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -33,6 +39,11 @@ public class ModBlocks {
 			registry.register(block.get());
 			reg.updateReference(registry);
 		});
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public static void onClientSetup() {
+		RenderTypeLookup.setRenderLayer(TEMPERED_JAR.get(), RenderType.translucent());
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {

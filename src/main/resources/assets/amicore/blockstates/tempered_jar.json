@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+      "model": "amicore:block/tempered_jar"
+      },
+      {
+      "model": "amicore:block/tempered_jar",
+        "y": 90
+      },
+      {
+      "model": "amicore:block/tempered_jar",
+        "y": 180
+      },
+      {
+      "model": "amicore:block/tempered_jar",
+        "y": 270
+      }
+    ]
+  }
+}
