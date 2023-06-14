@@ -3,11 +3,14 @@ package com.aubrithehuman.amicore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.aubrithehuman.amicore.block.ModBlocks;
 import com.aubrithehuman.amicore.config.AMIConfig;
 import com.aubrithehuman.amicore.crafting.StabilityObject;
 import com.aubrithehuman.amicore.crafting.StabilityRegistry;
 import com.aubrithehuman.amicore.item.ModItems;
 import com.aubrithehuman.amicore.malum.MalumSpiritAdditons;
+import com.aubrithehuman.amicore.recipe.ArtisanToExtendedAutotableTranslator;
+import com.aubrithehuman.amicore.tileentity.ModTileEntities;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
@@ -15,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -57,7 +61,6 @@ public class AMICore
 	// DATASET
 	public static final StabilityRegistry<StabilityObject> STABILITY_OBJECTS = new StabilityRegistry<StabilityObject>("stabilityobjects", StabilityObject.CODEC, AMICore.LOGGER);
 		
-		
 	
 	
 	@SubscribeEvent
@@ -89,6 +92,11 @@ public class AMICore
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+     
+        //Using Cucumber/Extended Crafting registry system
+        FMLJavaModLoadingContext.get().getModEventBus().register(new ModBlocks());
+        FMLJavaModLoadingContext.get().getModEventBus().register(new ModItems());
+        FMLJavaModLoadingContext.get().getModEventBus().register(new ModTileEntities());
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

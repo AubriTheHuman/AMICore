@@ -19,7 +19,9 @@ import com.aubrithehuman.amicore.crafting.IStabilityCrafting;
 import com.aubrithehuman.amicore.crafting.IStabilityRecipe;
 import com.aubrithehuman.amicore.crafting.StabilityEvents;
 import com.aubrithehuman.amicore.crafting.StabilityObject;
+import com.aubrithehuman.amicore.inventory.JarInventory;
 import com.aubrithehuman.amicore.particle.IServerParticle;
+import com.aubrithehuman.amicore.tileentity.TemperedSpiritJarTileEntity;
 import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
@@ -336,13 +338,14 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 									pedestal.markDirtyAndDispatch();
 									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
 								} 
-//								else if (tile instanceof SpiritJarTileEntity) {
-//									SpiritJarTileEntity jar = (SpiritJarTileEntity) tile;
-//									
-//									((IInventory) jar).setInventory(StackHelper.shrink(((IInventory) jar).getInventory(), getToTake(((IInventory) jar).getInventory(), this.recipe, false), true));
-////									jar.markDirty();
-//									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
-//								}
+								else if (tile instanceof TemperedSpiritJarTileEntity) {
+									TemperedSpiritJarTileEntity jar = (TemperedSpiritJarTileEntity) tile;
+									JarInventory inventory = (JarInventory) jar.getInventory();
+									
+									inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), getToTake(inventory.getStackInSlot(0), this.recipe, false), true));
+									jar.markDirtyAndDispatch();
+									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 0.4, 20);
+								}
 							}
 
 							double stability = ((IStabilityRecipe) this.recipe).getAdjustedStability(getLastStability());
@@ -446,11 +449,12 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 										ItemStack stack = inventory.getStackInSlot(0);
 										this.spawnItemParticlesRemake(pedestalPos, stack);
 									} 
-//									if (tile instanceof SpiritJarTileEntity && (this.progress > (powerCost - endingPowerSpirit))) {
-//										SpiritJarTileEntity jar = (SpiritJarTileEntity) tile;
-//										ItemStack stack = ((IInventory) jar).getInventory();
-//										this.spawnItemParticlesRemake(pedestalPos, stack);
-//									}
+									if (tile instanceof TemperedSpiritJarTileEntity && (this.progress > (powerCost - endingPowerSpirit))) {
+										TemperedSpiritJarTileEntity jar = (TemperedSpiritJarTileEntity) tile;
+										JarInventory inventory = ((JarInventory) jar.getInventory());
+										ItemStack stack = inventory.getStackInSlot(0);
+										this.spawnItemParticlesRemake(pedestalPos, stack);
+									}
 								}
 							}
 						}

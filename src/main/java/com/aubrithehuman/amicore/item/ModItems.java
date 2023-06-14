@@ -1,22 +1,37 @@
 package com.aubrithehuman.amicore.item;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import com.aubrithehuman.amicore.AMICore;
 import com.aubrithehuman.amicore.config.AMIConfig;
 import com.aubrithehuman.amicore.malum.MalumSpiritAdditons;
+import com.blakebr0.cucumber.item.BaseItem;
 import com.sammy.malum.MalumMod;
 import com.sammy.malum.common.items.SpiritItem;
 import com.sammy.malum.core.init.items.MalumItems;
 
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModItems {
 	
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AMICore.MOD_ID);
 	public static final DeferredRegister<Item> MALUM_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MalumMod.MODID);
+	
+	//Spaghettificate
+	public static final List<Supplier<Item>> BLOCK_ENTRIES = new ArrayList<>();
+	public static final Map<RegistryObject<Item>, Supplier<Item>> ENTRIES = new LinkedHashMap<>();
 	
 	public static final RegistryObject<Item> DUMMY_ORE_ITEM = ITEMS.register("dummy_ore_item", 
 			() -> new Item(new Item.Properties()));
@@ -65,5 +80,27 @@ public class ModItems {
 		ITEMS.register(eventBus);
 		if(AMIConfig.doMalum.get()) MALUM_ITEMS.register(eventBus);
 		
+	}
+	
+	@SubscribeEvent
+	public void onRegisterItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> registry = event.getRegistry();
+
+		BLOCK_ENTRIES.stream().map(Supplier::get).forEach(registry::register);
+		ENTRIES.forEach((reg, item) -> {
+			registry.register(item.get());
+			reg.updateReference(registry);
+		});
+	}
+
+	private static RegistryObject<Item> register(String name) {
+		return register(name, () -> new BaseItem(p -> p.tab(AMICore.MACHINE_TAB)));
+	}
+
+	private static RegistryObject<Item> register(String name, Supplier<Item> item) {
+		ResourceLocation loc = new ResourceLocation(AMICore.MOD_ID, name);
+		RegistryObject<Item> reg = RegistryObject.of(loc, ForgeRegistries.ITEMS);
+		ENTRIES.put(reg, () -> item.get().setRegistryName(loc));
+		return reg;
 	}
 }
