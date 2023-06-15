@@ -17,7 +17,7 @@ apply plugin: 'maven-publish'
 // MixinGradle:
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.6'
+version = '1.6.1a'
 group = 'com.aubrithehuman.amicore' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'amicore'
 
@@ -36,7 +36,7 @@ minecraft {
     //
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'snapshot', version: '20210309-1.16.5'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -159,6 +159,16 @@ dependencies {
     
     runtimeOnly fg.deobf("curse.maven:jei-238222:3681294")
     runtimeOnly fg.deobf("curse.maven:immersiveengineering-231951:3809596")
+    
+    
+    runtimeOnly fg.deobf("curse.maven:artisan-worktables-1-16-437529:3277959") // Artisan worktables
+    compileOnly fg.deobf("curse.maven:artisan-worktables-1-16-437529:3277959")
+    
+    runtimeOnly fg.deobf("curse.maven:artisan-tools-1-16-425746:3231972") // Artisan tools
+    compileOnly fg.deobf("curse.maven:artisan-tools-1-16-425746:3231972")
+    
+    runtimeOnly fg.deobf("curse.maven:athenaeum-1-16-437531:3466387")
+    compileOnly fg.deobf("curse.maven:athenaeum-1-16-437531:3466387")
     
    // runtimeOnly fg.deobf("curse.maven:caves-and-cliffs-backport-417430:3592876") // ccbp
    // compileOnly fg.deobf("curse.maven:caves-and-cliffs-backport-417430:3592876")

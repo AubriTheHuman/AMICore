@@ -41,7 +41,7 @@ public class ModTileEntities {
 
 	private static <T extends TileEntityType<?>> RegistryObject<T> register(String name, Supplier<TileEntity> tile, Supplier<Block[]> blocks) {
 		ResourceLocation loc = new ResourceLocation(AMICore.MOD_ID, name);
-		ENTRIES.add(() -> TileEntityType.Builder.of(tile, blocks.get()).build(null).setRegistryName(loc));
+		ENTRIES.add(() -> TileEntityType.Builder.create(tile, blocks.get()).build(null).setRegistryName(loc));
 		return RegistryObject.of(loc, ForgeRegistries.TILE_ENTITIES);
 	}
 }

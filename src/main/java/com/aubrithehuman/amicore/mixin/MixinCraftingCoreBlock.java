@@ -42,24 +42,24 @@ public abstract class MixinCraftingCoreBlock {
 
 	@Overwrite
 	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		ItemStack held = player.getItemInHand(hand);
-		if (!world.isClientSide()) {
-			TileEntity tile = world.getBlockEntity(pos);
+		ItemStack held = player.getHeldItem(hand);
+		if (!world.isRemote()) {
+			TileEntity tile = world.getTileEntity(pos);
 			if (tile instanceof CraftingCoreTileEntity) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
-				if (trace.getDirection() == Direction.UP) {
+				if (trace.getFace() == Direction.UP) {
 					BaseItemStackHandler inventory = core.getInventory();
 					ItemStack stack = inventory.getStackInSlot(0);
 					if (stack.isEmpty()) {
 						if (!held.isEmpty()) {
 							inventory.setStackInSlot(0, StackHelper.withSize(held, held.getCount(), false));
-							player.setItemInHand(hand, StackHelper.shrink(held, held.getCount(), false));
-							world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+							player.setHeldItem(hand, StackHelper.shrink(held, held.getCount(), false));
+							world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
-						ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
-						item.setNoPickUpDelay();
-						world.addFreshEntity(item);
+						ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), stack);
+						item.setNoPickupDelay();
+						world.addEntity(item);
 						inventory.setStackInSlot(0, ItemStack.EMPTY);
 					}
 				} else {
@@ -69,12 +69,12 @@ public abstract class MixinCraftingCoreBlock {
 						((IStabilityCrafting) core).setLastStability(((IStabilityCrafting) core).getCrafterStabilityFactor());
 						double stab = ((IStabilityCrafting) core).getLastStability();
 						
-						player.sendMessage(new StringTextComponent(String.format("Altar Stability: %.1f", stab)).withStyle(TextFormatting.LIGHT_PURPLE), player.getUUID());
+						player.sendMessage(new StringTextComponent(String.format("Altar Stability: %.1f", stab)).mergeStyle(TextFormatting.LIGHT_PURPLE), player.getUniqueID());
 						
 						if(core.getActiveRecipe() != null) {
 							stab = ((IStabilityRecipe) core.getActiveRecipe()).getAdjustedStability(stab);
-							player.sendMessage(new StringTextComponent(String.format("Recipe Stability: %.1f", ((IStabilityRecipe) core.getActiveRecipe()).getInherantStability() * 100.0 ) + "%").withStyle(TextFormatting.YELLOW), player.getUUID());
-							player.sendMessage(new StringTextComponent(String.format("Adjusted Stability: %.1f", stab)).withStyle(TextFormatting.YELLOW), player.getUUID());
+							player.sendMessage(new StringTextComponent(String.format("Recipe Stability: %.1f", ((IStabilityRecipe) core.getActiveRecipe()).getInherantStability() * 100.0 ) + "%").mergeStyle(TextFormatting.YELLOW), player.getUniqueID());
+							player.sendMessage(new StringTextComponent(String.format("Adjusted Stability: %.1f", stab)).mergeStyle(TextFormatting.YELLOW), player.getUniqueID());
 							
 							double stability = stab;
 							
@@ -87,7 +87,7 @@ public abstract class MixinCraftingCoreBlock {
 							stability = stability * 1 / 15;
 							stability = (stability - 1) * 0.1;
 							if(stability < 0) stability = 0.0;
-							player.sendMessage(new StringTextComponent(String.format("Recipe Fail Chance: %.1f", stability * 100.0) + "%").withStyle(TextFormatting.GOLD), player.getUUID());
+							player.sendMessage(new StringTextComponent(String.format("Recipe Fail Chance: %.1f", stability * 100.0) + "%").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
 							
 						  
 						} else {
@@ -101,7 +101,7 @@ public abstract class MixinCraftingCoreBlock {
 							stability = stability * 1 / 15;
 							stability = (stability - 1) * 0.1;
 							if(stability < 0) stability = 0.0;
-							player.sendMessage(new StringTextComponent(String.format("Altar Fail Chance: %.1f", stability * 100.0) + "%").withStyle(TextFormatting.GOLD), player.getUUID());
+							player.sendMessage(new StringTextComponent(String.format("Altar Fail Chance: %.1f", stability * 100.0) + "%").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
 							
 						}
 						
@@ -113,14 +113,14 @@ public abstract class MixinCraftingCoreBlock {
 							stab = 25;
 						}
 						
-						player.sendMessage(new StringTextComponent(String.format("Final Stability: %.1f/24.0", 25 - stab)).withStyle(stab <= 5 ? TextFormatting.GREEN : stab <= 12 ? TextFormatting.YELLOW : TextFormatting.RED), player.getUUID());
+						player.sendMessage(new StringTextComponent(String.format("Final Stability: %.1f/24.0", 25 - stab)).mergeStyle(stab <= 5 ? TextFormatting.GREEN : stab <= 12 ? TextFormatting.YELLOW : TextFormatting.RED), player.getUniqueID());
 						
 					} else if (held.getItem().equals(MalumItems.STAINED_SPIRIT_RESONATOR.get())) { 
 						((IStabilityCrafting) core).setLastStability(((IStabilityCrafting) core).getCrafterStabilityFactor());
 						double stab = ((IStabilityCrafting) core).getLastStability();
 						
 						HashMap<String, Pair<List<BlockPos>, Integer>> objs = ((IStabilityCrafting) core).getLastStabilityObjects();
-						player.sendMessage(new StringTextComponent("Altar Stabilizers:"), player.getUUID());
+						player.sendMessage(new StringTextComponent("Altar Stabilizers:"), player.getUniqueID());
 						int i = 0;
 						for (String key : objs.keySet()) {
 							//TODO Print out total of objects detected
@@ -130,12 +130,12 @@ public abstract class MixinCraftingCoreBlock {
 								AMICore.LOGGER.debug(key);                      
 								StabilityObject obj = AMICore.STABILITY_OBJECTS.getData(new ResourceLocation("amicore", key.substring(key.lastIndexOf(":") + 1)));
 								if(obj != null) {
-									player.sendMessage(new StringTextComponent("  -" + key + ": " + count + "/" + obj.maximum + (count >= obj.maximum ? " Max " : " ") +  (obj != null ? "(*" + obj.stability_factor + " each)" : "")).withStyle(TextFormatting.GRAY), player.getUUID());
+									player.sendMessage(new StringTextComponent("  -" + key + ": " + count + "/" + obj.maximum + (count >= obj.maximum ? " Max " : " ") +  (obj != null ? "(*" + obj.stability_factor + " each)" : "")).mergeStyle(TextFormatting.GRAY), player.getUniqueID());
 								}
 							}
 							i++;
 						}
-						if(i == 0) player.sendMessage(new StringTextComponent("  -None!").withStyle(TextFormatting.GRAY), player.getUUID());
+						if(i == 0) player.sendMessage(new StringTextComponent("  -None!").mergeStyle(TextFormatting.GRAY), player.getUniqueID());
 						
 					} else {
 						NetworkHooks.openGui((ServerPlayerEntity) player, core, pos);

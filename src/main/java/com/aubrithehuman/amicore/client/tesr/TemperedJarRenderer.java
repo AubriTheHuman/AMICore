@@ -1,19 +1,28 @@
 package com.aubrithehuman.amicore.client.tesr;
 
+import com.aubrithehuman.amicore.AMICore;
+import com.aubrithehuman.amicore.inventory.JarInventory;
 import com.aubrithehuman.amicore.tileentity.TemperedSpiritJarTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.sammy.malum.common.items.SpiritItem;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 public class TemperedJarRenderer extends TileEntityRenderer<TemperedSpiritJarTileEntity> {
 	
@@ -24,12 +33,15 @@ public class TemperedJarRenderer extends TileEntityRenderer<TemperedSpiritJarTil
 
 
 	private void add(IVertexBuilder renderer, MatrixStack stack, float x, float y, float z, float u, float v, float r, float g, float b, float a) {
+	    renderer.applyBakedLighting(255, null);
 	    renderer.pos(stack.getLast().getMatrix(), x, y, z)
 	            .color(r, g, b, a)
 	            .tex(u, v)
-	            .lightmap(0, 240)
+//	            .overlayCoords(0, 240)
 	            .normal(1, 0, 0)
 	            .endVertex();
+	   
+	    
 	}
 	
 	@Override
@@ -39,108 +51,114 @@ public class TemperedJarRenderer extends TileEntityRenderer<TemperedSpiritJarTil
 		Minecraft minecraft = Minecraft.getInstance();
 		ItemStack stack = tile.getInventory().getStackInSlot(0);
 		if (!stack.isEmpty()) {
-			matrix.pushPose();
-			matrix.translate(0.5D, 0.3D, 0.5D);
-			float scale = stack.getItem() instanceof BlockItem ? 0.9F : 1.0F;
+			matrix.push();
+			matrix.translate(0.5D, 0.2D, 0.5D);
+			float scale = stack.getItem() instanceof BlockItem ? 0.9F : 1.4F;
 			matrix.scale(scale, scale, scale);
 			double tick = System.currentTimeMillis() / 800.0D;
 			matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
-			matrix.mulPose(Vector3f.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
-			minecraft.getItemRenderer().renderStatic(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
-			matrix.popPose();
+			matrix.rotate(Vector3f.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
+			minecraft.getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
+			matrix.pop();
 			
-			matrix.pushPose();
 			
-			matrix.popPose();
+			//render fill fluid
+	        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(Fluids.WATER.getFluid().getAttributes().getStillTexture());
+			IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+			
+			float scale2 = ((JarInventory) tile.getInventory()).getTotal() / (64f*64f);
+			
+//			System.out.println("render Jar");
+	        
+	        int color = 16777215;
+	        if(stack.getItem() instanceof SpiritItem) {
+	        	color = ((SpiritItem) stack.getItem()).getColor().getRGB();
+	        }
+	        
+	        float a = 1.0F;
+	        float r = (color >> 16 & 0xFF) / 255.0F;
+	        float g = (color >> 8 & 0xFF) / 255.0F;
+	        float b = (color & 0xFF) / 255.0F;
+			
+			matrix.push();
+	        matrix.translate(.5, 0, .5);
+	        
+	        //rotation?
+	        Quaternion rotation = Vector3f.YP.rotationDegrees(0);
+	        matrix.rotate(rotation);
+	        
+	        
+	        if(scale2 <= 0.1f) { 
+	        	scale2 = 0.1f;  
+        	} else if(scale2 >= 1f) { 
+        		scale2 = 1.0f;  
+			}
+	        
+	        scale2 *= 0.75;
+	        
+	        matrix.translate(-0.5, 0.04f, -0.5);
+	        
+	        // Top Face
+	        add(builder, matrix, 1 - .84f, scale2, 0 + .84f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, 0 + .84f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, 1 - .84f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, 1 - .84f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        
+	        // Bottom Face of Top
+	        add(builder, matrix, 0 + .84f, scale2, 0 + .84f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, 0 + .84f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, 1 - .84f , sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, 1 - .84f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        
+	        // Front Faces [NORTH - SOUTH]
+	        add(builder, matrix, 0 + .84f, scale2, .84f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .84f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .84f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, 1 - 1, .84f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        
+	        add(builder, matrix, 0 + .84f, 1 - 1, .16f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .16f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .16f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, .16f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        
+	        // Back Faces
+	        add(builder, matrix, 0 + .84f, scale2, .16f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .16f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .16f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, 1 - 1, .16f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+
+	        add(builder, matrix, 0 + .84f, 1 - 1, .84f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .84f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .84f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, .84f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        
+	        rotation = Vector3f.YP.rotationDegrees(90);
+	        matrix.rotate(rotation);
+	        matrix.translate(-1f, 0, 0);
+	        // Front Faces [EAST - WEST]
+	        add(builder, matrix, 0 + .84f, scale2, .84f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .84f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .84f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, 1 - 1, .84f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+
+	        add(builder, matrix, 0 + .84f, 1 - 1, .16f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .16f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .16f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, .16f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        
+	        // Back Faces
+	        add(builder, matrix, 0 + .84f, scale2, .16f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .16f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .16f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, 1 - 1, .16f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+
+	        add(builder, matrix, 0 + .84f, 1 - 1, .84f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, 1 - 1, .84f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+	        add(builder, matrix, 1 - .84f, scale2, .84f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+	        add(builder, matrix, 0 + .84f, scale2, .84f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+	        
+	        matrix.pop();
 		}
-//		
-//		FluidStack fluid = tileEntityIn.getTank().getFluid();
-//		if (fluid == null) return;
-//		
-//		Fluid renderFluid = fluid.getFluid();
-//		if (renderFluid == null) return;
-//		
-//		FluidAttributes attributes = renderFluid.getAttributes();
-//        ResourceLocation fluidStill = attributes.getStillTexture(fluid);
-//        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
-//		
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
-		
-//		float scale = (1.0f - TANK_THICKNESS/2 - TANK_THICKNESS) * fluid.getAmount() / (tileEntityIn.getTank().getCapacity());
-		
-        Quaternion rotation = Vector3f.YP.rotationDegrees(0);
-        
-        int color = renderFluid.getAttributes().getColor();
-        
-        float a = 1.0F;
-        float r = (color >> 16 & 0xFF) / 255.0F;
-        float g = (color >> 8 & 0xFF) / 255.0F;
-        float b = (color & 0xFF) / 255.0F;
-		
-		matrix.pushPose();
-        matrix.translate(.5, 0, .5);
-        matrix.rotate(rotation);
-        if(scale == 0.330f) { matrix.translate(0, -.1, 0); matrix.scale(.6f, scale + 0.110f, .6f);  } else if(scale == 0.440f) { matrix.translate(0, -.2, 0); matrix.scale(.6f, scale + 0.110f, .6f); } else if(scale == 0.550f) { matrix.translate(0, -.4, 0); matrix.scale(.6f, scale + 0.210f, .6f); } else { matrix.scale(.6f, scale, .6f); }
-        matrix.translate(-.5, scale, -.5);
-        
-        // Top Face
-        add(builder, matrix, 1 - .8f, 1, .8f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1, .8f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        
-        // Bottom Face of Top
-        add(builder, matrix, 0 + .8f, 1, .8f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1, .8f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        
-        // Front Faces [NORTH - SOUTH]
-        add(builder, matrix, 0 + .8f, 0 + 1, .8f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .8f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .8f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1 - 1, .8f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        
-        add(builder, matrix, 0 + .8f, 1 - 1, .2f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .2f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 0 + 1, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        
-        // Back Faces
-        add(builder, matrix, 0 + .8f, 0 + 1, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .2f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1 - 1, .2f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-
-        add(builder, matrix, 0 + .8f, 1 - 1, .8f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .8f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .8f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 0 + 1, .8f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        
-        matrix.rotate(Vector3f.YP.rotationDegrees(90));
-        matrix.translate(-1f, 0, 0);
-        // Front Faces [EAST - WEST]
-        add(builder, matrix, 0 + .8f, 0 + 1, .8f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .8f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .8f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1 - 1, .8f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-
-        add(builder, matrix, 0 + .8f, 1 - 1, .2f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .2f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 0 + 1, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        
-        // Back Faces
-        add(builder, matrix, 0 + .8f, 0 + 1, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .2f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 1 - 1, .2f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-
-        add(builder, matrix, 0 + .8f, 1 - 1, .8f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 1 - 1, .8f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrix, 1 - .8f, 0 + 1, .8f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrix, 0 + .8f, 0 + 1, .8f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
-		matrix.pop();
 	}
 			
 }

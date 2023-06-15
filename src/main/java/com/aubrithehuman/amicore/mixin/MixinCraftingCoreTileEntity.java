@@ -158,11 +158,11 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 	public abstract <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count);
 
 	public void spawnItemParticlesRemake(BlockPos pedestalPos, ItemStack stack) {
-		if (this.getLevel() == null || this.getLevel().isClientSide())
+		if (this.getWorld() == null || this.getWorld().isRemote())
 			return;
 
-		ServerWorld world = (ServerWorld) this.getLevel();
-		BlockPos pos = this.getBlockPos();
+		ServerWorld world = (ServerWorld) this.getWorld();
+		BlockPos pos = this.getPos();
          
         double x = pedestalPos.getX() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
 		double y = pedestalPos.getY() + (world.getRandom().nextDouble() * 0.2D) + 1.4D;
@@ -192,7 +192,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 	            .addVelocity(velX, velY, velZ)
 	            .enableNoClip();
 //	            .enableGravity();
-    		((IServerParticle) b).repeatServer(level, x, y, z, 4);
+    		((IServerParticle) b).repeatServer(world, x, y, z, 4);
            
           ParticleBuilder c =  ParticleManager.create(MalumParticles.SPARKLE_PARTICLE)
 	            .setAlpha(0.08f, 0f)
@@ -204,11 +204,11 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 	            .randomVelocity(0.0025f, 0.0025f)
 	            .enableNoClip();
 //	            .enableGravity();
-  		((IServerParticle) c).repeatServer(level, x, y, z, 4);
+  		((IServerParticle) c).repeatServer(world, x, y, z, 4);
             
         } else {
         	velY = 0.25D;
-    		world.sendParticles(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
+    		world.spawnParticle(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
         }
         
         
@@ -232,7 +232,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 //			System.out.println(stack1.sameItem(stack2));
 //			System.out.println(ItemStack.tagMatches(stack1, stack2));
 //			System.out.println((stack1.getCount() == stack2.getCount()));
-			return !stack1.isEmpty() && stack1.sameItem(stack2) && ItemStack.tagMatches(stack1, stack2) && (stack1.getCount() == stack2.getCount());
+			return !stack1.isEmpty() && stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2) && (stack1.getCount() == stack2.getCount());
 		}
 		
 	}
@@ -245,10 +245,10 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 			for(Ingredient item : recipe.getIngredients()) {
 //				System.out.println(item.getItems().length);
 //				System.out.println(item.getItems()[0].toString());
-				if(item.getItems().length > 0) {
+				if(item.getMatchingStacks().length > 0) {
 //					System.out.println(item.getItems()[0].getItem().equals(itemStack.getItem()));
-					if(item.getItems()[0].getItem().equals(itemStack.getItem())) {
-						toTake = item.getItems()[0].getCount();
+					if(item.getMatchingStacks()[0].getItem().equals(itemStack.getItem())) {
+						toTake = item.getMatchingStacks()[0].getCount();
 					}
 				}
 			}
@@ -263,7 +263,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 		boolean mark = false;
 
 		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
-		World world = this.getLevel();
+		World world = this.getWorld();
 
 		if (world != null) {
 			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
@@ -272,21 +272,21 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 			this.updateRecipeInventoryRemake(stacks);
 
 			if (this.haveItemsChanged && (this.recipe == null || !this.recipe.matches(this.recipeInventory))) {
-				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipeFor(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
+				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
 				boolean flag = false;
 				//stacksize check! (this sucks but whatevs)
 				if(recipe != null && stacks != null) {
 					for(Ingredient item : recipe.getIngredients()) {
 	//						System.out.println(item.getItems().length);
 	//						System.out.println(item.getItems()[0].toString());
-						if(item.getItems().length > 0) {
+						if(item.getMatchingStacks().length > 0) {
 	//							System.out.println(item.getItems()[0].getItem().equals(itemStack.getItem()));
 							for(ItemStack stack : stacks) {
 //								System.out.println("Count "+ stack.getCount());
 //								System.out.println("Count "+ item.getItems()[0].getCount());
 //								System.out.println("CheckType " + (item.getItems()[0].getItem().equals(stack.getItem())));
 //								System.out.println("CheckSize " + (stack.getCount() >= item.getItems()[0].getCount()));
-								if(item.getItems()[0].getItem().equals(stack.getItem()) && !(stack.getCount() >= item.getItems()[0].getCount())) {
+								if(item.getMatchingStacks()[0].getItem().equals(stack.getItem()) && !(stack.getCount() >= item.getMatchingStacks()[0].getCount())) {
 									flag = true; 
 									break;
 								}
@@ -304,7 +304,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 //			      }).findFirst();
 //			}
 
-			if (!world.isClientSide()) {
+			if (!world.isRemote()) {
 				if (this.recipe != null) {
 					if (this.energy.getEnergyStored() > 0) {
 						
@@ -317,7 +317,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 						if (soundCooldown <= 0)
 		                {
 //							System.out.println("playsound");
-		                    level.playSound(null, worldPosition, MalumSounds.ALTAR_LOOP, SoundCategory.BLOCKS, 1f, 1f);
+		                    world.playSound(null, this.pos, MalumSounds.ALTAR_LOOP, SoundCategory.BLOCKS, 1f, 1f);
 		                    soundCooldown = 180;
 		                }
 						
@@ -328,7 +328,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 							
 							
 							for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-								TileEntity tile = world.getBlockEntity(pedestalPos);
+								TileEntity tile = world.getTileEntity(pedestalPos);
 
 								if (tile instanceof PedestalTileEntity) {
 									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -365,29 +365,30 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 							
 							// stability/500 chance to do event (min 1 every 25 sec, max 1 every sec)
 							
-							double rand = level.random.nextDouble();
+							double rand = world.rand.nextDouble();
 //							AMICore.LOGGER.debug(rand);
 							
 //							this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
 							//TODO: CHECK THE RECIPE RESULT LOGIC
-							ItemEntity item = new ItemEntity(world, this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 1.2, this.getBlockPos().getZ() + 0.5, this.recipe.getCraftingResult(this.recipeInventory));
-							item.setNoPickUpDelay();
-							item.setDeltaMovement(0.0, 0.0, 0.0);
+							ItemEntity item = new ItemEntity(world, this.getPos().getX() + 0.5, this.getPos().getY() + 1.2, this.getPos().getZ() + 0.5, this.recipe.getCraftingResult(this.recipeInventory));
+							item.setNoPickupDelay();
+							item.setMotion(0.0, 0.0, 0.0);
 							inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), getToTake(inventory.getStackInSlot(0), this.recipe, true), true));
 							this.progress = 0;
 							
 							
 							// do abject failure chance (low effective stab means higher fail chance, cuts off at less than 15
 							if (rand > stability) {
-								this.spawnParticles(ParticleTypes.END_ROD, this.getBlockPos(), 1.1, 50);
-								world.addFreshEntity(item);
-								level.playSound(null, worldPosition, MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.9f + level.random.nextFloat() * 0.2f);
+								this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
+								world.addEntity(item);
+								world.playSound(null, getPos(), MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.9f + world.rand.nextFloat() * 0.2f);
 //								System.out.println("recipe success!");
 								
 							} else {
-								this.spawnParticles(ParticleTypes.ASH, this.getBlockPos(), 1.1, 50);
-								this.spawnParticles(ParticleTypes.SMOKE, this.getBlockPos(), 1.1, 50);level.playSound(null, worldPosition, MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.9f + level.random.nextFloat() * 0.2f);
-								level.playSound(null, worldPosition, MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.4f + level.random.nextFloat() * 0.2f);
+								this.spawnParticles(ParticleTypes.ASH, this.getPos(), 1.1, 50);
+								this.spawnParticles(ParticleTypes.SMOKE, this.getPos(), 1.1, 50);
+								world.playSound(null, getPos(), MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.9f + world.rand.nextFloat() * 0.2f);
+								world.playSound(null, getPos(), MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.4f + world.rand.nextFloat() * 0.2f);
 //								System.out.println("recipe failure!");
 							}
 
@@ -418,13 +419,13 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 							
 							// stability/500 chance to do event (min 1 every 25 sec, max 1 every sec)
 							
-							double rand = level.random.nextDouble();
+							double rand = world.rand.nextDouble();
 							
 							//can only fire at max every 12 ticks, 25/500 becomes on avg 1/26 ticks
 							if(this.stabilityCooldown <= 0) {
 								//call weighted random effect on random fire
 								if (rand < stability/500) {
-									StabilityEvents.randomEffect(world, worldPosition, this, stability);
+									StabilityEvents.randomEffect(world, getPos(), this, stability);
 									this.stabilityCooldown = 12;
 								}
 							} else {
@@ -432,11 +433,11 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 							}
 							
 							
-							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getBlockPos(), 1.15, 2);
+							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
 
 							if (this.shouldSpawnItemParticlesRemake()) {
 								for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-									TileEntity tile = world.getBlockEntity(pedestalPos);
+									TileEntity tile = world.getTileEntity(pedestalPos);
 									
 									int powerCost = this.recipe.getPowerCost();
 									int powerRate = this.recipe.getPowerRate();
@@ -512,7 +513,7 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 			for(int offZ = (int) (-1 * getSearchRangeXZ()); offZ <= getSearchRangeXZ(); offZ++) {
 				for(int offY = (int) (-1 * getSearchRangeY()); offY <= getSearchRangeY(); offY++) {
 //					AMICore.LOGGER.debug(this.getBlockPos().offset(offX, offZ, offY).toString());
-					BlockState toCheck = this.level.getBlockState(this.getBlockPos().offset(offX, offY, offZ));
+					BlockState toCheck = this.world.getBlockState(this.getPos().add(offX, offY, offZ));
 //					AMICore.LOGGER.debug(toCheck.getBlock().toString());
 //					System.out.println(AMICore.STABILITY_OBJECTS.hasKey(new ResourceLocation("amicore:dark_oak_log")));
 //					System.out.println(AMICore.STABILITY_OBJECTS.hasKey(new ResourceLocation("minecraft:dark_oak_log")));
@@ -542,12 +543,12 @@ public abstract class MixinCraftingCoreTileEntity extends BaseInventoryTileEntit
 								
 								if((Integer) count < stb0.maximum) {
 									count++;
-									poses.add(this.getBlockPos().offset(offX, offY, offZ));
+									poses.add(this.getPos().add(offX, offY, offZ));
 									output += stb0.stability_factor;
 								}						
 							} else {
 								poses = new ArrayList<BlockPos>();
-								poses.add(this.getBlockPos().offset(offX, offY, offZ));
+								poses.add(this.getPos().add(offX, offY, offZ));
 								count = 1; 
 								output += stb0.stability_factor;
 							}

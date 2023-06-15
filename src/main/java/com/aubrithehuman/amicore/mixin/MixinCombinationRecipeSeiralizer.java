@@ -25,21 +25,21 @@ public class MixinCombinationRecipeSeiralizer {
 	@Overwrite(remap = false)
 	public CombinationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		NonNullList<Ingredient> inputs = NonNullList.create();
-		Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
+		Ingredient input = Ingredient.deserialize(JSONUtils.getJsonObject(json, "input"));
 		inputs.add(input);
 
-		JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
+		JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
 		for (int i = 0; i < ingredients.size(); i++) {
-			Ingredient ingredient = Ingredient.fromJson(ingredients.get(i));
+			Ingredient ingredient = Ingredient.deserialize(ingredients.get(i));
 			inputs.add(ingredient);
 		}
 
-		ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+		ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 		if (!json.has("powerCost"))
 			throw new JsonSyntaxException("Missing powerCost for combination crafting recipe");
-		int powerCost = JSONUtils.getAsInt(json, "powerCost");
-		int powerRate = JSONUtils.getAsInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
-		double stability = JSONUtils.getAsFloat(json, "stability");
+		int powerCost = JSONUtils.getInt(json, "powerCost");
+		int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
+		double stability = JSONUtils.getFloat(json, "stability");
 		
 		CombinationRecipe r = new CombinationRecipe(recipeId, inputs, output, powerCost, powerRate);
 		((IStabilityRecipe) r).setInherantStability(stability);
@@ -53,10 +53,10 @@ public class MixinCombinationRecipeSeiralizer {
 
 		NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 		for (int i = 0; i < size; i++) {
-			inputs.set(i, Ingredient.fromNetwork(buffer));
+			inputs.set(i, Ingredient.read(buffer));
 		}
 
-		ItemStack output = buffer.readItem();
+		ItemStack output = buffer.readItemStack();
 		int powerCost = buffer.readVarInt();
 		int powerRate = buffer.readVarInt();
 		double stability = buffer.readDouble();		
@@ -72,10 +72,10 @@ public class MixinCombinationRecipeSeiralizer {
 		buffer.writeVarInt(recipe.getIngredients().size());
 
 		for (Ingredient ingredient : recipe.getIngredients()) {
-			ingredient.toNetwork(buffer);
+			ingredient.write(buffer);
 		}
 
-		buffer.writeItem(recipe.getResultItem());
+		buffer.writeItemStack(recipe.getRecipeOutput());
 		buffer.writeVarInt(recipe.getPowerCost());
 		buffer.writeVarInt(recipe.getPowerRate());
 		buffer.writeDouble(((IStabilityRecipe) recipe).getInherantStability());

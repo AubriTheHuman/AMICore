@@ -26,20 +26,20 @@ public abstract class MixinPedestalBlock {
 
 	@Overwrite
 	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		TileEntity tile = world.getBlockEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof PedestalTileEntity) {
 			PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 			BaseItemStackHandler inventory = pedestal.getInventory();
 			ItemStack input = inventory.getStackInSlot(0);
-			ItemStack held = player.getItemInHand(hand);
+			ItemStack held = player.getHeldItem(hand);
 			if (input.isEmpty() && !held.isEmpty()) {
 				inventory.setStackInSlot(0, StackHelper.withSize(held, held.getCount(), false));
-				player.setItemInHand(hand, StackHelper.shrink(held, held.getCount(), false));
-				world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				player.setHeldItem(hand, StackHelper.shrink(held, held.getCount(), false));
+				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			} else if (!input.isEmpty()) {
-				ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), input);
-				item.setNoPickUpDelay();
-				world.addFreshEntity(item);
+				ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), input);
+				item.setNoPickupDelay();
+				world.addEntity(item);
 				inventory.setStackInSlot(0, ItemStack.EMPTY);
 			}
 		}

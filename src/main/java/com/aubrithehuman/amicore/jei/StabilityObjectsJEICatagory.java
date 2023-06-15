@@ -74,11 +74,11 @@ public class StabilityObjectsJEICatagory implements IRecipeCategory<StabilityObj
 		background.draw(matrixStack);
 		
         Minecraft minecraft = Minecraft.getInstance();
-        FontRenderer font = minecraft.font;
+        FontRenderer font = minecraft.fontRenderer;
         
         StringTextComponent s = new StringTextComponent("Max " + recipe.getMaximum() + ", " + (recipe.stability_factor > 0 ? "+" : "-" ) + recipe.stability_factor + " Each");
-        s.withStyle(TextFormatting.WHITE);
-        font.drawShadow(matrixStack, s, 28, 7, 0);
+        s.mergeStyle(TextFormatting.WHITE);
+        font.drawTextWithShadow(matrixStack, s, 28, 7, 0);
          
     }
 	

@@ -43,11 +43,11 @@ public class ModBlocks {
 	
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetup() {
-		RenderTypeLookup.setRenderLayer(TEMPERED_JAR.get(), RenderType.translucent());
+		RenderTypeLookup.setRenderLayer(TEMPERED_JAR.get(), RenderType.getTranslucent());
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {
-		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(AMICore.MACHINE_TAB)));
+		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.group(AMICore.MACHINE_TAB)));
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block, Function<RegistryObject<Block>, Supplier<? extends BlockItem>> item) {

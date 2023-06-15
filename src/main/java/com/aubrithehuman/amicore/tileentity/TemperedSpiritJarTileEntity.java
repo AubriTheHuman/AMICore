@@ -32,14 +32,14 @@ public class TemperedSpiritJarTileEntity extends BaseTileEntity {
 	}
 	
 	@Override
-    public void load(BlockState state, CompoundNBT tag) {
-        super.load(state, tag);
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
         this.getInventory().deserializeNBT(tag);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        super.save(tag);
+    public CompoundNBT write(CompoundNBT tag) {
+        super.write(tag);
         tag.merge(this.getInventory().serializeNBT());
         return tag;
     }
@@ -54,7 +54,7 @@ public class TemperedSpiritJarTileEntity extends BaseTileEntity {
     }
 
     public boolean isUsableByPlayer(PlayerEntity player) {
-        BlockPos pos = this.getBlockPos();
-        return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+        BlockPos pos = this.getPos();
+        return player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
     }
 }

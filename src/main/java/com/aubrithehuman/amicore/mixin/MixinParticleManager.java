@@ -59,17 +59,17 @@ public class MixinParticleManager implements IServerParticle {
 	@Override
 	public void spawnServer(World world, double x, double y, double z)
     {
-        double yaw = world.random.nextFloat() * Math.PI * 2, pitch = world.random.nextFloat() * Math.PI - Math.PI / 2, xSpeed = world.random.nextFloat() * maxXSpeed, ySpeed = world.random.nextFloat() * maxYSpeed, zSpeed = world.random.nextFloat() * maxZSpeed;
+        double yaw = world.rand.nextFloat() * Math.PI * 2, pitch = world.rand.nextFloat() * Math.PI - Math.PI / 2, xSpeed = world.rand.nextFloat() * maxXSpeed, ySpeed = world.rand.nextFloat() * maxYSpeed, zSpeed = world.rand.nextFloat() * maxZSpeed;
         this.vx += Math.sin(yaw) * Math.cos(pitch) * xSpeed;
         this.vy += Math.sin(pitch) * ySpeed;
         this.vz += Math.cos(yaw) * Math.cos(pitch) * zSpeed;
-        double yaw2 = world.random.nextFloat() * Math.PI * 2, pitch2 = world.random.nextFloat() * Math.PI - Math.PI / 2, xDist = world.random.nextFloat() * maxXDist, yDist = world.random.nextFloat() * maxYDist, zDist = world.random.nextFloat() * maxZDist;
+        double yaw2 = world.rand.nextFloat() * Math.PI * 2, pitch2 = world.rand.nextFloat() * Math.PI - Math.PI / 2, xDist = world.rand.nextFloat() * maxXDist, yDist = world.rand.nextFloat() * maxYDist, zDist = world.rand.nextFloat() * maxZDist;
         this.dx = Math.sin(yaw2) * Math.cos(pitch2) * xDist;
         this.dy = Math.sin(pitch2) * yDist;
         this.dz = Math.cos(yaw2) * Math.cos(pitch2) * zDist;
     
 //        System.out.println("Attempt!");
-        ((ServerWorld) world).sendParticles(data, x + dx, y + dy, z + dz, 0, vx, vy, vz, 0.18F);
+        ((ServerWorld) world).spawnParticle(data, x + dx, y + dy, z + dz, 0, vx, vy, vz, 0.18F);
     }
 	
 	@Override	

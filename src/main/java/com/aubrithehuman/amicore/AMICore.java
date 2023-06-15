@@ -179,7 +179,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_ORE_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -190,7 +190,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_METAL_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -201,7 +201,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_MACHINE_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -212,7 +212,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_FLUID_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -223,7 +223,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_MATERIAL_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -234,7 +234,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_BIO_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -245,7 +245,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_PETRO_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -256,7 +256,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_INTERMEDIATES_ITEM.get().getDefaultInstance();
 		}
 	};
@@ -267,7 +267,7 @@ public class AMICore
 		}
 
 		@Override
-		public ItemStack makeIcon() {
+		public ItemStack createIcon() {
 			return ModItems.DUMMY_TOOLS_ITEM.get().getDefaultInstance();
 		}
 	};

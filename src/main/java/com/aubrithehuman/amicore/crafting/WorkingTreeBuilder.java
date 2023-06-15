@@ -103,7 +103,7 @@ public class WorkingTreeBuilder {
     public WorkingTreeBuilder addText(int x, int y, String string, String[] color) {
 		Step s = new Step<String>("text", x, y).addDirection(GuiDirection.NONE).addTooltip(string);
 		for (String str : color) {
-			s.addTooltipFormatting(TextFormatting.getByName(str.toUpperCase()));
+			s.addTooltipFormatting(TextFormatting.getValueByName(str.toUpperCase()));
 		}
 		build.addStep(s);
 		return this;
@@ -113,7 +113,7 @@ public class WorkingTreeBuilder {
     public WorkingTreeBuilder addTextShadow(int x, int y, String string, String[] color) {
 		Step s = new Step<String>("text_shadow", x, y).addDirection(GuiDirection.NONE).addTooltip(string);
 		for (String str : color) {
-			s.addTooltipFormatting(TextFormatting.getByName(str.toUpperCase()));
+			s.addTooltipFormatting(TextFormatting.getValueByName(str.toUpperCase()));
 		}
 		build.addStep(s);
 		return this;

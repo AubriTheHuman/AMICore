@@ -71,11 +71,11 @@ public abstract class MixinSpiritAltarTileEntity extends SimpleTileEntity implem
             {
                 spinUp++;
             }
-            if (MalumHelper.areWeOnServer(level))
+            if (MalumHelper.areWeOnServer(world))
             {
                 if (soundCooldown == 0)
                 {
-                    level.playSound(null, worldPosition, MalumSounds.ALTAR_LOOP, SoundCategory.BLOCKS, 1, 1f);
+                    world.playSound(null, pos, MalumSounds.ALTAR_LOOP, SoundCategory.BLOCKS, 1, 1f);
                     soundCooldown = 180;
                 }
                 ItemStack stack = inventory.getStackInSlot(0);
@@ -92,24 +92,24 @@ public abstract class MixinSpiritAltarTileEntity extends SimpleTileEntity implem
                         progress *= 0.5f;
                         int horizontal = 4;
                         int vertical = 2;
-                        Collection<BlockPos> nearbyBlocks = MalumHelper.getBlocks(worldPosition, horizontal, vertical, horizontal);
+                        Collection<BlockPos> nearbyBlocks = MalumHelper.getBlocks(pos, horizontal, vertical, horizontal);
                         for (BlockPos pos : nearbyBlocks)
                         {
-                            if (level.getBlockEntity(pos) instanceof IAltarProvider)
+                            if (world.getTileEntity(pos) instanceof IAltarProvider)
                             {
-                                IAltarProvider tileEntity = (IAltarProvider) level.getBlockEntity(pos);
+                                IAltarProvider tileEntity = (IAltarProvider) world.getTileEntity(pos);
                                 ItemStack providedStack = tileEntity.providedInventory().getStackInSlot(0);
                                 //CHANGED
 //                                System.out.println("doing-changes");
                                 if(recipe.extraItemIngredients.size() > 0) {
                                 	if (recipe.extraItemIngredients.get(extrasInventory.nonEmptyItems()).matches(providedStack))
                                     {
-                                        level.playSound(null, pos, MalumSounds.ALTAR_CONSUME, SoundCategory.BLOCKS, 1, 0.9f + level.random.nextFloat() * 0.2f);
+                                        world.playSound(null, pos, MalumSounds.ALTAR_CONSUME, SoundCategory.BLOCKS, 1, 0.9f + world.rand.nextFloat() * 0.2f);
                                         Vector3d providedItemPos = tileEntity.providedItemPos();
-                                        INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(()->level.getChunkAt(pos)), SpiritAltarConsumeParticlePacket.fromIngredients(providedStack, recipe.spiritIngredients, providedItemPos.x,providedItemPos.y,providedItemPos.z, itemPos.x,itemPos.y,itemPos.z));
-                                        extrasInventory.playerInsertItem(level, providedStack.split(1));
-                                        MalumHelper.updateAndNotifyState(level, pos);
-                                        MalumHelper.updateAndNotifyState(level, this.worldPosition);
+                                        INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(()->world.getChunkAt(pos)), SpiritAltarConsumeParticlePacket.fromIngredients(providedStack, recipe.spiritIngredients, providedItemPos.x,providedItemPos.y,providedItemPos.z, itemPos.x,itemPos.y,itemPos.z));
+                                        extrasInventory.playerInsertItem(world, providedStack.split(1));
+                                        MalumHelper.updateAndNotifyState(world, pos);
+                                        MalumHelper.updateAndNotifyState(world, this.pos);
 
                                         break;
                                     }
@@ -130,13 +130,13 @@ public abstract class MixinSpiritAltarTileEntity extends SimpleTileEntity implem
                             }
                         }
                     }
-                    INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(()->level.getChunkAt(worldPosition)), SpiritAltarCraftParticlePacket.fromIngredients(recipe.spiritIngredients, itemPos.x, itemPos.y, itemPos.z));
+                    INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(()->world.getChunkAt(pos)), SpiritAltarCraftParticlePacket.fromIngredients(recipe.spiritIngredients, itemPos.x, itemPos.y, itemPos.z));
                     stack.shrink(recipe.inputIngredient.count);
-                    ItemEntity entity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, recipe.outputIngredient.getItem());
-                    level.addFreshEntity(entity);
+                    ItemEntity entity = new ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, recipe.outputIngredient.getItem());
+                    world.addEntity(entity);
                     progress = 0;
                     extrasInventory.clearItems();
-                    level.playSound(null, worldPosition, MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.9f + level.random.nextFloat() * 0.2f);
+                    world.playSound(null, pos, MalumSounds.ALTAR_CRAFT, SoundCategory.BLOCKS, 1, 0.9f + world.rand.nextFloat() * 0.2f);
 
                     //CHANGED
 //                    System.out.println("doing-changes");
@@ -144,7 +144,7 @@ public abstract class MixinSpiritAltarTileEntity extends SimpleTileEntity implem
                     {
                         recipe = null;
                     }
-                    MalumHelper.updateAndNotifyState(level, worldPosition);
+                    MalumHelper.updateAndNotifyState(world, pos);
                 }
 
             }
@@ -157,7 +157,7 @@ public abstract class MixinSpiritAltarTileEntity extends SimpleTileEntity implem
             }
             spedUp = false;
         }
-        if (MalumHelper.areWeOnClient(level))
+        if (MalumHelper.areWeOnClient(world))
         {
             passiveParticles();
         }

@@ -83,9 +83,9 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
     {
         background.draw(matrixStack);
         Minecraft minecraft = Minecraft.getInstance();
-        FontRenderer font = minecraft.font;
+        FontRenderer font = minecraft.fontRenderer;
 
-        minecraft.getTextureManager().bind(ICONS);
+        minecraft.getTextureManager().bindTexture(ICONS);
         for (Step s : recipe.getSteps()) {
         	if(s.getDisplayable() instanceof String) {
         		String key = (String) s.getDisplayable();
@@ -145,18 +145,18 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	        	        //blit(matrixStack, s.getX() , s.getY(), 174, 240, 16, 16, 256, 256);	  
 	        	        StringTextComponent str = new StringTextComponent(s.getTooltip());
 	        	        for(TextFormatting t : (List<TextFormatting>) s.getToolTipFormats()) {
-	        	        	str.withStyle(t);
+	        	        	str.mergeStyle(t);
 	        	        }
-	        	        font.draw(matrixStack, str, s.getX(), s.getY(), 0);
+	        	        font.drawText(matrixStack, str, s.getX(), s.getY(), 0);
 	        	        break;
 	        		}
 	        		case "text_shadow": {
 	        	        //blit(matrixStack, s.getX() , s.getY(), 174, 240, 16, 16, 256, 256);	  
 	        	        StringTextComponent str = new StringTextComponent(s.getTooltip());
 	        	        for(TextFormatting t : (List<TextFormatting>) s.getToolTipFormats()) {
-	        	        	str.withStyle(t);
+	        	        	str.mergeStyle(t);
 	        	        }
-	        	        font.drawShadow(matrixStack, str, s.getX(), s.getY(), 0);
+	        	        font.drawTextWithShadow(matrixStack, str, s.getX(), s.getY(), 0);
 	        	        break;
 	        		}
 	        		default: {
@@ -177,7 +177,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 	@Override
 	public void setIngredients(WorkingTree recipe, IIngredients ingredients) {
 		stackmap = new ArrayList<Pair<Object,Point>>();
-		ItemStack out = ((Ingredient) recipe.getStep(0).getDisplayable()).getItems()[0];
+		ItemStack out = ((Ingredient) recipe.getStep(0).getDisplayable()).getMatchingStacks()[0];
 		ingredients.setInput(VanillaTypes.ITEM, out);
 		stackmap.add(new Pair<Object, Point>(out, new Point(recipe.getStep(0).getX(), recipe.getStep(0).getY())));
 		List<ItemStack> items = new ArrayList<ItemStack>();
@@ -185,7 +185,7 @@ public class WorkingTreeJEICatagory implements IRecipeCategory<WorkingTree> {
 		for (int i = 1; i < recipe.getSteps().size(); i++) {
 			Step s = recipe.getStep(i);
 			if(s.getDisplayable() instanceof Ingredient) {
-				ItemStack item = ((Ingredient) s.getDisplayable()).getItems()[0];
+				ItemStack item = ((Ingredient) s.getDisplayable()).getMatchingStacks()[0];
 				items.add(item);
 				stackmap.add(new Pair<Object, Point>(item, new Point(s.getX(), s.getY())));
 			}

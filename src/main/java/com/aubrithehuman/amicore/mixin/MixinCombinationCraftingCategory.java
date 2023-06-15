@@ -41,30 +41,30 @@ public abstract class MixinCombinationCraftingCategory implements IRecipeCategor
 	
 	@Override
 	public void draw(ICombinationRecipe recipe, MatrixStack matrix, double mouseX, double mouseY) {
-		FontRenderer font = Minecraft.getInstance().font;
+		FontRenderer font = Minecraft.getInstance().fontRenderer;
 		
 		if(recipe != null) {
 			IStabilityRecipe r = (IStabilityRecipe) recipe;
 			
-			StringTextComponent text0 = (StringTextComponent) new StringTextComponent(" Extremely Stable ").withStyle(TextFormatting.DARK_GREEN);
+			StringTextComponent text0 = (StringTextComponent) new StringTextComponent(" Extremely Stable ").mergeStyle(TextFormatting.DARK_GREEN);
 			double recipeStab = r.getInherantStability();
 			
 			if (recipeStab <= 0.1) {
-				text0 = (StringTextComponent) new StringTextComponent("Extremely Unstable").withStyle(TextFormatting.DARK_RED);
+				text0 = (StringTextComponent) new StringTextComponent("Extremely Unstable").mergeStyle(TextFormatting.DARK_RED);
 			} else if (recipeStab <= 0.25 && recipeStab > 0.1) {
-				text0 = (StringTextComponent) new StringTextComponent("   Very Unstable  ").withStyle(TextFormatting.RED);
+				text0 = (StringTextComponent) new StringTextComponent("   Very Unstable  ").mergeStyle(TextFormatting.RED);
 			} else if (recipeStab <= 0.5 && recipeStab > 0.25) {
-				text0 = (StringTextComponent) new StringTextComponent("  Highly Unstable ").withStyle(TextFormatting.GOLD);
+				text0 = (StringTextComponent) new StringTextComponent("  Highly Unstable ").mergeStyle(TextFormatting.GOLD);
 			} else if (recipeStab <= 0.75 && recipeStab > 0.5) {
-				text0 = (StringTextComponent) new StringTextComponent("     Unstable     ").withStyle(TextFormatting.YELLOW);
+				text0 = (StringTextComponent) new StringTextComponent("     Unstable     ").mergeStyle(TextFormatting.YELLOW);
 			} else if (recipeStab <= 0.9 && recipeStab > 0.75) {
-				text0 = (StringTextComponent) new StringTextComponent("   Mostly Stable  ").withStyle(TextFormatting.GREEN);
+				text0 = (StringTextComponent) new StringTextComponent("   Mostly Stable  ").mergeStyle(TextFormatting.GREEN);
 			} else if (recipeStab <= 0.99 && recipeStab > 0.9) {
-				text0 = (StringTextComponent) new StringTextComponent("    Very Stable   ").withStyle(TextFormatting.DARK_GREEN);
+				text0 = (StringTextComponent) new StringTextComponent("    Very Stable   ").mergeStyle(TextFormatting.DARK_GREEN);
 			}
 			
 //			font.draw(matrix, text0, 5, -12, -1);
-			font.draw(matrix, text0, 28, -18, -1);
+			font.drawText(matrix, text0, 28, -18, -1);
 		}
 	}
 	

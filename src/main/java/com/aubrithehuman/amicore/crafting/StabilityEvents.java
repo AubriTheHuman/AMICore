@@ -127,31 +127,31 @@ public class StabilityEvents {
 		if(core instanceof CraftingCoreTileEntity) {
 			Map<BlockPos, ItemStack> pedestalsWithItems = ((CraftingCoreTileEntity) core).getPedestalsWithItems();
 			if(pedestalsWithItems.size() > 0) {
-				int rand = level.random.nextInt(pedestalsWithItems.size());
+				int rand = level.rand.nextInt(pedestalsWithItems.size());
 				BlockPos pop = (BlockPos) pedestalsWithItems.keySet().toArray()[rand];
-				TileEntity pedestal = level.getBlockEntity(pop);
+				TileEntity pedestal = level.getTileEntity(pop);
 				if(pedestal instanceof PedestalTileEntity) {
 					ItemEntity item = new ItemEntity(level, pop.getX() + 0.5, pop.getY() + 1.2, pop.getZ() + 0.5, ((PedestalTileEntity) pedestal).getInventory().getStackInSlot(0));
-					item.setNoPickUpDelay();
-					level.addFreshEntity(item);
+					item.setNoPickupDelay();
+					level.addEntity(item);
 					((PedestalTileEntity) pedestal).getInventory().setStackInSlot(0, ItemStack.EMPTY);
-					level.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					level.playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				}
 			}
 			
 		} else if (core instanceof SpiritAltarTileEntity) {
 			Map<BlockPos, ItemStack> pedestalsWithItems = ((CraftingCoreTileEntity) core).getPedestalsWithItems();
-			int rand = level.random.nextInt(pedestalsWithItems.size() - 1);
+			int rand = level.rand.nextInt(pedestalsWithItems.size() - 1);
 			BlockPos pop = (BlockPos) pedestalsWithItems.keySet().toArray()[rand];
-			TileEntity pedestal = level.getBlockEntity(pop);
+			TileEntity pedestal = level.getTileEntity(pop);
 			if (pedestal instanceof SimpleInventoryTileEntity)
 	        {
 	            for (ItemStack itemStack : ((SimpleInventoryTileEntity) pedestal).inventory.stacks())
 	            {
 	            	ItemEntity item = new ItemEntity(level, pos.getX()+0.5f, pos.getY()+1.2f, pos.getZ()+0.5f, itemStack);
-	            	item.setNoPickUpDelay();
-					level.addFreshEntity(item);
-					level.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+	            	item.setNoPickupDelay();
+					level.addEntity(item);
+					level.playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 	            }
 			}
 		}
@@ -159,21 +159,21 @@ public class StabilityEvents {
 	
 	public static void spark(World level, BlockPos pos, TileEntity core) {
 //	    level.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2.0D, 2.0D, 2.0D);
-		((ServerWorld)level).sendParticles(ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 15, 0, 0, 0, 0.1D);
-		((ServerWorld)level).sendParticles(ParticleTypes.FLASH, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 6, 0, 0, 0, 0.1D);
-		((ServerWorld)level).sendParticles(ParticleTypes.FIREWORK, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 50, 0, 0, 0, 0.1D);
-		level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		((ServerWorld)level).spawnParticle(ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 15, 0, 0, 0, 0.1D);
+		((ServerWorld)level).spawnParticle(ParticleTypes.FLASH, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 6, 0, 0, 0, 0.1D);
+		((ServerWorld)level).spawnParticle(ParticleTypes.FIREWORK, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 50, 0, 0, 0, 0.1D);
+		level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 //		System.out.println("spark!");
 	}
 	
 	public static void noise(World level, BlockPos pos, TileEntity core) {
-		level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
 //		System.out.println("noise!");
 	}
 	
 	public static void explode(World level, BlockPos pos, TileEntity core) {
 //		System.out.println("explode!");
-		level.explode(null, pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5, 5.0F * level.random.nextFloat(), Explosion.Mode.NONE);
+		level.createExplosion(null, pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5, 5.0F * level.rand.nextFloat(), Explosion.Mode.NONE);
 	}
 	
 	public static void mobs(World level, BlockPos pos, TileEntity core) {
@@ -202,7 +202,7 @@ public class StabilityEvents {
 			}
 			case "skeleton": {
 				SkeletonEntity skele = new SkeletonEntity(EntityType.SKELETON, level);
-				skele.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.BOW, 1));
+				skele.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.BOW, 1));
 				spawnMob(skele, pos, level);
 				return;
 			}
@@ -228,7 +228,7 @@ public class StabilityEvents {
 			}
 			case "vex": {
 				VexEntity vex = new VexEntity(EntityType.VEX, level);
-				vex.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD, 1));
+				vex.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD, 1));
 				spawnMob(vex, pos, level);
 				return;
 			}
@@ -246,41 +246,40 @@ public class StabilityEvents {
 	
 	private static void spawnMob(Entity spawn, BlockPos pos, World level) {
 		int i = 0;
-		BlockPos offsett = pos.offset(0.5, 1.2, 0.5);
+		BlockPos offsett = pos.add(0.5, 1.2, 0.5);
 		while (i < 10) {
-			BlockPos temp = pos.offset(6 - level.random.nextInt(13), 0, 6 - level.random.nextInt(13));
+			BlockPos temp = pos.add(6 - level.rand.nextInt(13), 0, 6 - level.rand.nextInt(13));
 			if(level.getBlockState(temp).getBlock().equals(Blocks.AIR)) {
 				offsett = temp;
 				i = 15;
 			}
 			i++;
 		}
-		spawn.setPos(offsett.getX(),offsett.getY(),offsett.getZ());
-		float face = 360 * level.random.nextFloat();
-		spawn.setYBodyRot(face);
-		spawn.setYBodyRot(face);
-		level.addFreshEntity(spawn);
+		spawn.setPosition(offsett.getX(),offsett.getY(),offsett.getZ());
+		float face = 360 * level.rand.nextFloat();
+		spawn.setRotationYawHead(face);
+		level.addEntity(spawn);
 	}
 	
 	public static void hallucinate(World level, BlockPos pos, TileEntity core) {
-		level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.WITHER_SPAWN, SoundCategory.PLAYERS, 1, 0.9f + level.random.nextFloat() * 0.2f);
+		level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.PLAYERS, 1, 0.9f + level.rand.nextFloat() * 0.2f);
 //		System.out.println("hallucinate!");
 	}
 	
 	public static void lightning(World level, BlockPos pos, TileEntity core, double stability) {
 //		System.out.println("lightning!");
 		//x y z r
-		List<Entity> nearestEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(pos.offset(-10, -5, -10), pos.offset(10, 5, 10)));
+		List<Entity> nearestEntities = level.getLoadedEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.add(-10, -5, -10), pos.add(10, 5, 10)));
 		for (int i = 0; i < stability / 10; i++) {
 			LightningBoltEntity strike = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, level);
 			if(nearestEntities.size() > 0) {
-				int rand = level.random.nextInt(nearestEntities.size());
-				strike.setPos(nearestEntities.get(rand).getX(),nearestEntities.get(rand).getY(),nearestEntities.get(rand).getZ());
+				int rand = level.rand.nextInt(nearestEntities.size());
+				strike.setPosition(nearestEntities.get(rand).getPosX(),nearestEntities.get(rand).getPosY(),nearestEntities.get(rand).getPosZ());
 				nearestEntities.remove(rand);
 			} else {
-				strike.setPos(pos.getX() + (10 - level.random.nextInt(21)),pos.getY(),pos.getZ() + (10 - level.random.nextInt(21)));
+				strike.setPosition(pos.getX() + (10 - level.rand.nextInt(21)),pos.getY(),pos.getZ() + (10 - level.rand.nextInt(21)));
 			}
-			level.addFreshEntity(strike);
+			level.addEntity(strike);
 		}
 	}
 	

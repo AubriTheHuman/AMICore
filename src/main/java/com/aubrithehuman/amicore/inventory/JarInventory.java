@@ -108,13 +108,13 @@ public class JarInventory extends ItemStackHandler {
     	return 0;
     }
     
-    public void insertStackInLastSlot(ItemStack stack) {
+    public ItemStack insertStackInLastSlot(ItemStack stack) {
+    	    	
     	int lastFilled = getLastFilledSlot();
     	ItemStack lastStack = this.getStackInSlot(lastFilled);
     	
     	if(lastStack.isEmpty()) {
     		this.setStackInSlot(lastFilled, stack);
-    		return;
     	}
     	
     	//add to last existing stack if space
@@ -136,12 +136,15 @@ public class JarInventory extends ItemStackHandler {
     			stack = ItemStack.EMPTY;
     		}
     	}
-    	 
+    	
+    	int slots = this.getSlots();
     	//are we at the last slot, if not then add the remaining stack in the next slot
-    	if(!(lastFilled >= this.getSlots() - 1) && !stack.isEmpty()) {
+    	if(!(lastFilled >= slots - 1) && !stack.isEmpty()) {
     		this.setStackInSlot(lastFilled + 1, stack.copy());
     		stack = ItemStack.EMPTY;
     	}
+    	
+    	return stack;
     }
     
     public int getTotal() {

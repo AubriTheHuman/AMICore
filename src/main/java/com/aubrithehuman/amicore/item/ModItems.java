@@ -94,7 +94,7 @@ public class ModItems {
 	}
 
 	private static RegistryObject<Item> register(String name) {
-		return register(name, () -> new BaseItem(p -> p.tab(AMICore.MACHINE_TAB)));
+		return register(name, () -> new BaseItem(p -> p.group(AMICore.MACHINE_TAB)));
 	}
 
 	private static RegistryObject<Item> register(String name, Supplier<Item> item) {

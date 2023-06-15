@@ -45,7 +45,7 @@ public class TemperedSpiritJar extends Block  {
 			.build();
 	
 	public TemperedSpiritJar() {
-		super(Properties.of(Material.GLASS).sound(SoundType.GLASS).strength(5.0f, 10.0f).harvestTool(ToolType.PICKAXE).noOcclusion());
+		super(Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(5.0f, 10.0f).harvestTool(ToolType.PICKAXE).variableOpacity());
 	}
 	
 	@Override
@@ -59,40 +59,45 @@ public class TemperedSpiritJar extends Block  {
 	}
 	
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		TileEntity tile = world.getBlockEntity(pos);
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TemperedSpiritJarTileEntity) {
 			TemperedSpiritJarTileEntity jar = (TemperedSpiritJarTileEntity) tile;
 			if(jar.getInventory() instanceof JarInventory) {
 				JarInventory inventory = (JarInventory) jar.getInventory();
 				ItemStack input = inventory.getStackInSlot(inventory.getLastFilledSlot());
-				ItemStack held = player.getItemInHand(hand);
+				ItemStack held = player.getHeldItem(hand);
 				if (input.isEmpty() && !held.isEmpty()) {
 					if(held.getItem() instanceof SpiritItem) {
-						inventory.insertStackInLastSlot(StackHelper.withSize(held, held.getCount(), false));
-						player.setItemInHand(hand, StackHelper.shrink(held, held.getCount(), false));
-						world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+						//add stack and return remaining stack
+						ItemStack inserting = inventory.insertStackInLastSlot(StackHelper.withSize(held, held.getCount(), false));
+//						if(inserting.equals(held, true)) {
+							player.setHeldItem(hand, inserting);
+							world.playSound(null, pos, SoundEvents.BLOCK_END_PORTAL_FRAME_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);							
+//						}
 					}
 				} else if (!input.isEmpty() && !held.isEmpty()) {
 					if(held.getItem() instanceof SpiritItem) {
 						//need to match type!
 						if(held.getItem() == input.getItem()) {
 							//increment based on what already exists
-							inventory.insertStackInLastSlot(StackHelper.withSize(held, held.getCount(), false));
-							player.setItemInHand(hand, StackHelper.shrink(held, held.getCount(), false));
-							world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);							
+							ItemStack inserting = inventory.insertStackInLastSlot(StackHelper.withSize(held, held.getCount(), false));
+							player.setHeldItem(hand, inserting);
+							if(inserting.isEmpty()) {
+								world.playSound(null, pos, SoundEvents.BLOCK_END_PORTAL_FRAME_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);							
+							}
 						}
 					}
 				} else if (!input.isEmpty() && player.isCrouching() && held.isEmpty()) {
-					ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), input);
-					item.setNoPickUpDelay();
-					world.addFreshEntity(item);
+					ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), input);
+					item.setNoPickupDelay();
+					world.addEntity(item);
 					inventory.setStackInSlot(inventory.getLastFilledSlot(), ItemStack.EMPTY);
 				}
 				
 				if(!input.isEmpty() && held.getItem().equals(MalumItems.HALLOWED_SPIRIT_RESONATOR.get())) {
-					if(!world.isClientSide()) {
-						player.sendMessage(new StringTextComponent("Jar Contents: " + input.getItem().getRegistryName().toString() + "*" + inventory.getTotal()).withStyle(TextFormatting.AQUA), player.getUUID());
+					if(!world.isRemote()) {
+						player.sendMessage(new StringTextComponent("Jar Contents: " + input.getItem().getRegistryName().toString() + "*" + inventory.getTotal()).mergeStyle(TextFormatting.AQUA), player.getUniqueID());
 					}
 				}
 			}
@@ -102,16 +107,16 @@ public class TemperedSpiritJar extends Block  {
 	}
 	 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			TileEntity tile = world.getBlockEntity(pos);
+			TileEntity tile = world.getTileEntity(pos);
 			if (tile instanceof TemperedSpiritJarTileEntity) {
 				TemperedSpiritJarTileEntity jar = (TemperedSpiritJarTileEntity) tile;
-				InventoryHelper.dropContents(world, pos, ((JarInventory) jar.getInventory()).getStacks());
+				InventoryHelper.dropInventoryItems(world, pos, ((JarInventory) jar.getInventory()).toIInventory());
 			}
 		}
 
-		super.onRemove(state, world, pos, newState, isMoving);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 
